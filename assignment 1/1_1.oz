@@ -6,5 +6,5 @@ local Take in
       else Xs.1|{Take Xs.2 N-1}
       end
    end
-   {Browse {Take [1 2 3] ~4}}
+   {Browse {Take [1 2 3] 2}}
 end

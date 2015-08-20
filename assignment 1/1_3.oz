@@ -6,5 +6,5 @@ local Merge in
       else Ys.1|{Merge Xs Ys.2}
       end
    end
-   {Browse {Merge [1 2 3] nil }}
+   {Browse {Merge [1 2 3] [4 5] }}
 end
