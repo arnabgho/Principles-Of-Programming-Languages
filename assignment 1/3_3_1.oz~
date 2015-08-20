@@ -1,0 +1,13 @@
+declare
+fun {checkDiagonals grid}
+   
+end
+
+
+declare
+fun {checkRows grid}
+end
+
+
+declare
+fun
