@@ -1,6 +1,9 @@
-local ZipWith BinOp in
+local ZipWith in
    fun{ZipWith BinOp Xs Ys}
-      {BinOp Xs.1 Ys.1}|{ZipWith Xs.2 Ys.2}
+      if Xs==nil then Ys
+      elseif Ys==nil then Xs	 
+      else {BinOp Xs.1 Ys.1}|{ZipWith BinOp Xs.2 Ys.2}
+      end
    end
-   {Browse {ZipWith fun {$ a b} a+b end [2 3 4] [7 8 0]}}
+   {Browse {ZipWith fun {$ A B} A*B end [4] [7 8 ]}}
 end
