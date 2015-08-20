@@ -1,0 +1,20 @@
+local FoldR Map Twice in
+   fun{FoldR BinaryFunction Xs Identity}
+      case Xs
+      of nil then Identity
+      [] H|T then { BinaryFunction H {FoldR BinaryFunction T Identity}  }
+      end
+   end
+
+   local Map NewFunction in
+      fun{Map UnaryFunction Xs}
+	 fun{NewBinaryFunction A B}
+	    case B
+	    of nil then {UnaryFunction A}
+	    [] then {UnaryFunction A} | {UnaryFunction B} 
+	    end
+	 end
+	 {FoldR NewBinaryFunction Xs nil}
+      end
+   end
+end
