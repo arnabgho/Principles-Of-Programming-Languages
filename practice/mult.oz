@@ -6,5 +6,6 @@ local X Y Z in
    {Browse Z}
 end
 */
-{Browse 2*3*4}
-{Browse ( { IntToFloat 5} / {IntToFloat 3} ) }
+%{Browse 2*3*4}
+{Browse {Abs ~2.3}}
+%{Browse ( { IntToFloat 5} / {IntToFloat 3} ) }

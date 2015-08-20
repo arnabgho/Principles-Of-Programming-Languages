@@ -1,3 +1,29 @@
+<<<<<<< HEAD
+local Neg Mult Fact in
+fun {Neg Pow}
+   if Pow==1 then 1
+   else
+      ~1*{Neg Pow-1}
+   end
+end
+fun {Mult X Pow}
+   if Pow==0 then 1
+   else
+      X*{Mult Pow-1}
+   end
+end
+fun {Fact Pow}
+   if Pow == 1 then 1
+   else
+      Pow*{Fact Pow-1}
+   end
+end
+
+fun lazy {Sin X Ind}
+   (({Neg Ind}*{Mult X Ind*2-1}) div {fact 2*Ind-1}) %+ {Sin X Ind+1}
+end
+end
+=======
 %declare
 %fun {Sine X N Pow Sgn Fac }
 %   1.0 % / {IntToFloat Fac} | {Sine X (N+1.0) (Pow*X*X) (~Sgn) (Fac*(2.0*N)*(2.0*N+1.0)) }
@@ -8,3 +34,4 @@
 %  + Sine{X N+1 Pow*X*X ~Sgn Fac*(2*N)*(2*N+1) 
 
 {Browse 1.0}
+>>>>>>> 8db49856fc932741f389f76fff23a9a5a553c505
