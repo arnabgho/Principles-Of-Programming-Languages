@@ -7,8 +7,19 @@ fun {Sine X N Pow Sgn Fac }
    end
 end
 
+
+declare
+fun {FoldR L B I}
+   case L
+   of nil then I
+   [] H|T then {B H {FoldR T B I}}
+   end 
+end
+
+declare
+fun {Sum A B}
+   A+B
+end
+
+
 {Browse {Sine 4.0 1.0 1.0 1.0 1.0}  }
-
-%  + Sine{X N+1 Pow*X*X ~Sgn Fac*(2*N)*(2*N+1) 
-
-{Browse 1.0}
