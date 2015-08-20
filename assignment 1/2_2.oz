@@ -16,12 +16,10 @@ local FoldR Map Twice Sum in
    local NewBinaryFunction in
       fun{Map UnaryFunction Xs}
 	 fun{NewBinaryFunction A B}
-	    if B==nil then {UnaryFunction A}|nil
-	    else {UnaryFunction A} |  B 
-	    end
+	    {UnaryFunction A} |  B 
 	 end
 	 {FoldR NewBinaryFunction Xs nil}
       end
    end
-   {Browse {Map Twice nil } }
+   {Browse {Map Twice [1 2 3] } }
 end
