@@ -1,0 +1,11 @@
+declare
+fun {Compress L}
+   case L
+   of nil then nil
+   [] H|nil then H|nil
+   end
+end
+
+
+      
+      

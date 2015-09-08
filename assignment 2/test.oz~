@@ -1,0 +1,7 @@
+
+
+
+declare X in
+X={NewCell 1}
+
+{Browse @X}

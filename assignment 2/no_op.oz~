@@ -1,0 +1,64 @@
+%local I O X in 
+%   I = {NewCell a} {Browse @I}
+%   {Assign I b}    {Browse @I}
+%   {Assign I X}    {Browse @I}
+%   X = 5*5          
+%   {Exchange I O thread O+1 end} {Browse @I}
+%end
+
+%{Browse {NewName} }
+
+%local I X in
+%   I={NewCell 1|nil} {Browse @I}
+%   {Assign I 2|2|nil} {Browse @I}
+%   X=I {Browse @X}
+%end
+
+declare SemStack in
+SemStack = {NewCell [ [1 2 3] [4 5 6] ]}
+
+
+declare
+fun {No_Op}
+   SemStack:=(@SemStack).2
+   nil
+end
+
+{Browse @SemStack}
+{Browse {No_Op}}
+{Browse @SemStack}
+
+declare
+fun {Handle Statements}
+   SemStack:=[ tuple(statements:Statements environment:{NewCell nil}) ]
+   nil
+end
+
+
+declare
+fun {Composition S1 S2 E}
+   SemStack:=(@SemStack).2
+   SemStack:=tuple(statements:S1 environment:{NewCell E})| tuple(statements:S2 environment:{NewCell E})  | SemStack
+   nil
+end
+
+   
+declare
+fun {Driver}
+   local X S E in
+      if @SemStack==nil then nil
+      else
+	 X=(@SemStack).1
+	 S=X.statements
+	 E=X.environment 
+	 case S
+	 of nop|nil then {No_Op}
+	 [] S1|S2 then {Composition S1 S2 E}
+	 end
+      end
+   end
+   
+end
+
+%{Handle  [ [nop] [nop] ]}
+%{Browse {Driver}}

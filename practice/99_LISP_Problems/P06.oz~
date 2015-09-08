@@ -1,0 +1,33 @@
+declare
+fun {My_Reverse L}
+   %{Browse L}
+   case L of
+      nil then nil
+   else
+      {Append {My_Reverse L.2} L.1|nil }
+   end
+end
+
+
+%declare
+%fun {Equal L1 L2}
+%   case L1 L2
+%   of nil nil then true   
+%   [] X|_ Y|_ then
+%      if X!=Y then false else {Equal L1.2 L2.2} end
+%   else false
+%   end
+%end
+
+{Browse 1==1} 
+%declare
+%fun {Check_Palindrome L}
+%   L== {My_Reverse [1 2 3]}
+%end
+
+
+%{Browse {Check_Palindrome [1 2 1]}}
+
+%{Browse {My_Reverse [1 2 3]} }
+
+%{Browse {Equal [1 2 3] [1 2 3]}}   

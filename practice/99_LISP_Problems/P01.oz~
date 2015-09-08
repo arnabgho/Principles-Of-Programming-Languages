@@ -1,0 +1,11 @@
+declare
+fun {MYLAST L}
+   case L
+   of nil then nil   
+   of x|nil then  x
+   else {MYLAST L.2}
+   end
+end
+
+{Browse {MYLAST [1 2 3] }}
+      

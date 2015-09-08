@@ -1,0 +1,6 @@
+%{Browse 1|2|3|nil|nil}
+{Browse {mod 4 3}}
+%local X in
+%   X=1
+%   {Browse  [X] }
+%end
