@@ -1,6 +1,6 @@
 declare Nop Handle SemStack Init in
 fun {Nop}
-   {PopSemStack}
+   nil
 end
 
 fun {Handle}
@@ -11,11 +11,13 @@ fun {Handle}
 	 case X
 	 of U|V then
 	    SemStack := [[@SemStack.1.1.1 @SemStack.1.2] [@SemStack.1.1.2 @SemStack.1.2] @SemStack.2]
+	    {Handle}
 	 [] Nop then
 	    {Nop}
 	 end
       else
 	 SemStack := [[@SemStack.1.1 @SemStack.2] [@SemStack.1.2 @SemStack.2]]
+	 {Handle}
       end
    end
 end
@@ -24,5 +26,3 @@ fun {Init S}
    SemStack = {NewCell [S 0]}
    {Handle}
 end
-
-{Browse {Handle [[[Nop]][Nop]]}}
