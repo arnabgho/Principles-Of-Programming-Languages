@@ -4,25 +4,21 @@ fun {Nop}
 end
 
 fun {Handle}
-   case @SemStack.1
-   of X|Xr then
-      case Xr
-      of environment then
-	 case X
-	 of U|V then
-	    SemStack := [[@SemStack.1.1.1 @SemStack.1.2] [@SemStack.1.1.2 @SemStack.1.2] @SemStack.2]
-	    {Handle}
-	 [] Nop then
-	    {Nop}
-	 end
-      else
-	 SemStack := [[@SemStack.1.1 @SemStack.2] [@SemStack.1.2 @SemStack.2]]
+   case @SemStack
+   of nil then
+      nil
+   else
+      case @SemStack.1.statement
+      of X|Xr then
+	 SemStack := [tuple(statement:@SemStack.1.statement.1 environment:@SemStack.1.environment) tuple(statement:@SemStack.1.statement.2 environment:@SemStack.1.environment) @SemStack.2]
 	 {Handle}
+      [] Nop then
+	 {Nop}
       end
    end
 end
 
 fun {Init S}
-   SemStack = {NewCell [S 0]}
+   SemStack = {NewCell [tuple(statement:S environment:{NewCell nil})]}
    {Handle}
 end
