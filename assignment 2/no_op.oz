@@ -14,13 +14,16 @@
 %   X=I {Browse @X}
 %end
 
-declare SemStack in
+declare Dummy SemStack Driver No_Op Composition Handle  in
 SemStack = {NewCell [ tuple(statements:[[nop] [nop] [nop]] environment:{NewCell nil}) ]}
+Dummy = {NewCell 0}
 
 
-declare
 fun {No_Op}
+   {Browse @SemStack }
    SemStack:=(@SemStack).2
+   {Browse @SemStack }
+   Dummy:={Driver}
    nil
 end
 
@@ -28,22 +31,25 @@ end
 %{Browse {No_Op}}
 %{Browse @SemStack}
 
-declare
+
 fun {Handle Statements}
    SemStack:=[ tuple(statements:Statements environment:{NewCell nil}) ]
    nil
 end
 
 
-declare
+
 fun {Composition S1 S2 E}
+   {Browse @SemStack }
    SemStack:=(@SemStack).2
    SemStack:=tuple(statements:S1 environment:{NewCell E})| tuple(statements:S2 environment:{NewCell E})  | SemStack
+   {Browse @SemStack }
+   Dummy:={Driver}
    nil
 end
 
    
-declare
+
 fun {Driver}
    local X S E in
       if @SemStack==nil then nil
@@ -52,13 +58,12 @@ fun {Driver}
 	 S=X.statements
 	 E=X.environment 
 	 case S
-	 of nop|nil then {No_Op}
-	 [] S1|S2 then {Composition S1 S2 E}
+	 of nop|nil then  {No_Op}
+	 [] S1|S2 then  {Composition S1 S2 E}
 	 end
       end
-   end
-   
+   end   
 end
 
 %{Handle  [ [nop] [nop] ]}
-{Browse {Driver}}
+Dummy:={Driver}
