@@ -1,3 +1,15 @@
+declare Dummy SemStack Driver No_Op Composition Handle  in
+SemStack = {NewCell [ tuple(statements:[[nop] [nop] [nop]] environment:{Dictionary.new}) ]}
+Dummy = {NewCell 0}
+
+
+fun {No_Op}
+   %{Browse @SemStack }
+   SemStack:=(@SemStack).2
+   (@SemStack).1
+   %{Browse @SemStack }
+   %{Driver}
+end
 %{Browse @SemStack}
 %{Browse {No_Op}}
 %{Browse @SemStack}
