@@ -1,32 +1,3 @@
-%local I O X in 
-%   I = {NewCell a} {Browse @I}
-%   {Assign I b}    {Browse @I}
-%   {Assign I X}    {Browse @I}
-%   X = 5*5          
-%   {Exchange I O thread O+1 end} {Browse @I}
-%end
-
-%{Browse {NewName} }
-
-%local I X in
-%   I={NewCell 1|nil} {Browse @I}
-%   {Assign I 2|2|nil} {Browse @I}
-%   X=I {Browse @X}
-%end
-
-declare Dummy SemStack Driver No_Op Composition Handle  in
-SemStack = {NewCell [ tuple(statements:[[nop] [nop] [nop]] environment:{NewCell nil}) ]}
-Dummy = {NewCell 0}
-
-
-fun {No_Op}
-   %{Browse @SemStack }
-   SemStack:=(@SemStack).2
-   (@SemStack).1
-   %{Browse @SemStack }
-   %{Driver}
-end
-
 %{Browse @SemStack}
 %{Browse {No_Op}}
 %{Browse @SemStack}

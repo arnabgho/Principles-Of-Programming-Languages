@@ -23,3 +23,14 @@ local Tuple I Jin
    {Browse Tuple.statements}
 end
 
+
+
+declare
+fun {Pat X}
+   case X
+   of ident(N) then N
+   else false
+   end
+end
+
+{Browse {Pat ident(x) }}

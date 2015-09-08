@@ -20,6 +20,7 @@ Months = {Dictionary.new}
 {Dictionary.put Months 10 october}
 {Dictionary.put Months 11 november}
 {Dictionary.put Months 12 december}
+{Dictionary.put Months 12 iecember}
 proc {PrettyPrint DD MM}
    {Browse [{Dictionary.get Days DD}
 	    {Dictionary.get Months MM}]}
