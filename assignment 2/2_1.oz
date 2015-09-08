@@ -1,17 +1,19 @@
 declare Nop Handle in
-proc {Nop S}
-   skip
+fun {Nop S}
+   2
 end
 
-proc {Handle S}
+fun {Handle S}
    case S
    of X|Xr then
       {Handle X}|{Handle Xr}
    [] nil then
-      skip
+      nil
    else case S
 	of Nop then
 	   {Nop S}
 	end
    end
 end
+
+{Browse {Handle [[[Nop]][Nop]]}}
