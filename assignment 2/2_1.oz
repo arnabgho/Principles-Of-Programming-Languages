@@ -16,4 +16,4 @@ fun {Handle S}
    end
 end
 
-{Browse {Handle [[[Nop]][Nop]]}}
+{Browse {Handle [[Nop] [Nop]]}
