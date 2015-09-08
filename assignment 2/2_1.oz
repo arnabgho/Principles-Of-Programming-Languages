@@ -1,19 +1,24 @@
-declare Nop Handle in
-fun {Nop S}
-   2
+declare Nop Handle SemStack Init in
+fun {Nop}
+   nil
 end
 
-fun {Handle S}
-   case S
-   of X|Xr then
-      {Handle X}|{Handle Xr}
-   [] nil then
+fun {Handle}
+   case @SemStack
+   of nil then
       nil
-   else case S
-	of Nop then
-	   {Nop S}
-	end
+   else
+      case @SemStack.1.statement
+      of X|Xr then
+	 SemStack := [tuple(statement:@SemStack.1.statement.1 environment:@SemStack.1.environment) tuple(statement:@SemStack.1.statement.2 environment:@SemStack.1.environment) @SemStack.2]
+	 {Handle}
+      [] Nop then
+	 {Nop}
+      end
    end
 end
 
-{Browse {Handle [[[Nop]][Nop]]}}
+fun {Init S}
+   SemStack = {NewCell [tuple(statement:S environment:{NewCell nil})]}
+   {Handle}
+end
