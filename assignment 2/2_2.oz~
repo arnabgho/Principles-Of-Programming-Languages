@@ -1,0 +1,5 @@
+declare Statement in
+Statement = [localvar ident(x) [localvar ident(y) [localvar ident(x) [nop]]]]
+
+local X in
+   

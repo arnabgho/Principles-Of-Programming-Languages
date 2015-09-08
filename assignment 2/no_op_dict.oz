@@ -32,7 +32,12 @@ fun {Composition S1 S2 E}
    %{Driver}
 end
 
-   
+fun {Variable_Dec Ident S E}
+   SemStack:=(@SemStack).2
+   {Dictionary.put E Ident random}
+   SemStack:=tuple(statements:S environment:E)|@SemStack
+   (@SemStack).1
+end
 
 fun {Driver}
    local X S E in
@@ -43,6 +48,8 @@ fun {Driver}
 	 E=X.environment 
 	 case S
 	 of nop|nil then  {No_Op} | {Driver}
+	 [] localvar|ident(Ident)|S_bar then {Variable_Dec Ident S_bar E}|{Driver}
+	    [] 
 	 [] S1|S2 then  {Composition S1 S2 E} |  {Driver}
 	 end
       end
