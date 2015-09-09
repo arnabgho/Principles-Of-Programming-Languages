@@ -48,8 +48,7 @@ fun {Driver}
 	 E=X.environment 
 	 case S
 	 of nop|nil then  {No_Op} | {Driver}
-	 [] localvar|ident(Ident)|S_bar then {Variable_Dec Ident S_bar E}|{Driver}
-	    [] 
+	 [] localvar|ident(Ident)|S_bar then {Variable_Dec Ident S_bar E}|{Driver} 
 	 [] S1|S2 then  {Composition S1 S2 E} |  {Driver}
 	 end
       end

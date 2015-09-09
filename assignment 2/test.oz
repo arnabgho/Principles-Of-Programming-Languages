@@ -34,3 +34,9 @@ fun {Pat X}
 end
 
 {Browse {Pat ident(x) }}
+
+
+
+{Browse {NewName}}
+{Browse {NewName}}
+
