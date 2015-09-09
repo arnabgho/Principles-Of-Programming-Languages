@@ -27,7 +27,7 @@ proc {BindRefToKeyInSAS Key RefKey}
    local X Y in
       X={ReturnRootKey Key}
       Y={ReturnRootKey RefKey}
-      {Dictionary.put KeyValueStore Key KeyValueStore.RefKey}
+      {Dictionary.put KeyValueStore X reference(Y)}
    end
 end
 
