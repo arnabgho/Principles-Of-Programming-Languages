@@ -4,12 +4,10 @@ declare Dummy Pop SemStack Driver No_Op Composition Handle Variable_Dec Variable
 SemStack = {NewCell [tuple(statements:[[nop] [nop] [nop]] environment:{Dictionary.new})]}
 Dummy = {NewCell 0}
 
-
 fun {No_Op}
    SemStack:=@SemStack.2
    @SemStack
 end
-
 
 fun {Handle Statements}
    SemStack:=[tuple(statements:Statements environment:{Dictionary.new})]
@@ -45,9 +43,8 @@ fun {Pop}
 end
 
 fun {Value_Bind Ident V E}
-   local X in
-      {Unify ident(Ident) V E}
-   end
+   {Unify ident(Ident) V E}
+   @SemStack
 end
 
 fun {Driver}

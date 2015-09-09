@@ -2,7 +2,6 @@ declare KeyValueStore
 KeyValueStore={Dictionary.new}
 CurrentKey={NewCell 0}
 
-
 declare
 fun {ReturnRootKey Key}
    case KeyValueStore.Key
@@ -10,8 +9,6 @@ fun {ReturnRootKey Key}
    else Key
    end
 end
-
-
 
 declare 
 proc{BindValueToKeyInSAS Key Val}
