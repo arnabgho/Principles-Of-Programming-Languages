@@ -41,7 +41,7 @@ end
 declare
 fun {RetrieveFromSAS Key}
    case {Dictionary.member KeyValueStore Key}
-   of false then raise keyNotFoundException (Key) end
+   of false then raise keyNotFoundException(Key) end
    else {Dictionary.get KeyValueStore {ReturnRootKey Key}}
    end
 end
