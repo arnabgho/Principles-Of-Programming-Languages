@@ -61,7 +61,6 @@ fun {Driver}
       end
    end   
 end
-\
 {Browse {Handle  [ [nop] [nop] ]}}
 {Browse {Handle [localvar ident(x) [nop] ]}}
 %{Browse {Driver}}

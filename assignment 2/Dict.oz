@@ -26,3 +26,5 @@ proc {PrettyPrint DD MM}
 	    {Dictionary.get Months MM}]}
 end
 {PrettyPrint 3 12}
+{Browse Months.1}
+{Browse {Dictionary.member Days 20}}
