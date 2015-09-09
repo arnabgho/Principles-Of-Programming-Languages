@@ -1,6 +1,3 @@
-
-
-
 %declare X in
 %X={NewCell [1 2 3] }
 
@@ -32,6 +29,11 @@ fun {Pat X}
    else false
    end
 end
+
+declare
+SemStack = {NewCell [ tuple(statements:[[nop] [nop] [nop]] environment:{Dictionary.new})]}
+
+{Browse @SemStack.1}
 
 {Browse {Pat ident(x) }}
 
