@@ -41,4 +41,3 @@ SemStack = {NewCell [ tuple(statements:[[nop] [nop] [nop]] environment:{Dictiona
 
 {Browse {NewName}}
 {Browse {NewName}}
-
