@@ -18,6 +18,7 @@ end
 
 fun {Handle Statements}
    SemStack:=[tuple(statements:Statements environment:{Dictionary.new})]
+   {Driver}
    %nil
 end
 
@@ -66,5 +67,5 @@ fun {Driver}
    end   
 end
 
-%{Handle  [ [nop] [nop] ]}
-{Browse {Driver}}
+{Browse {Handle  [ [nop]  [nop] [nop] ]}}
+%{Browse {Driver}}
