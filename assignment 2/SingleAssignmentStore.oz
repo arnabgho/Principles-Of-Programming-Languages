@@ -1,7 +1,8 @@
-declare
+declare KeyValueStore CurrentKey in 
 KeyValueStore={Dictionary.new}
 CurrentKey={NewCell 0}
 
+declare
 fun {ReturnRootKey Key}
    case KeyValueStore.Key
    of reference(X) then {ReturnRootKey X}
@@ -9,7 +10,8 @@ fun {ReturnRootKey Key}
    end
 end
 
- 
+
+declare
 proc{BindValueToKeyInSAS Key Val}
    case {Dictionary.get KeyValueStore {ReturnRootKey Key}}
    of equivalence(X) then {Dictionary.put KeyValueStore X Val }
@@ -18,6 +20,7 @@ proc{BindValueToKeyInSAS Key Val}
 end
 
 
+declare
 proc {BindRefToKeyInSAS Key RefKey}
    local X Y in
       X={ReturnRootKey Key}
@@ -26,7 +29,7 @@ proc {BindRefToKeyInSAS Key RefKey}
    end
 end
 
-
+declare
 fun {AddKeyToSAS}
    {Browse @CurrentKey}
    @CurrentKey := @CurrentKey+1
@@ -34,7 +37,7 @@ fun {AddKeyToSAS}
    @CurrentKey
 end
 
-
+declare
 fun {RetrieveFromSAS Key}
    case {Dictionary.member KeyValueStore Key}
    of false then raise keyNotFoundException(Key) end
