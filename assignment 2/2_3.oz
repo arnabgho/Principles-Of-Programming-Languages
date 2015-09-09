@@ -6,7 +6,7 @@ Dummy = {NewCell 0}
 fun {No_Op}
    %{Browse @SemStack }
    SemStack:=@SemStack.2
-   @SemStack.1
+   @SemStack
    %{Browse @SemStack }
    %{Driver}
 end
@@ -26,7 +26,7 @@ fun {Composition S1 S2 E}
    SemStack:=@SemStack.2
    SemStack:=tuple(statements:S1 environment:E) | tuple(statements:S2 environment:E)  | @SemStack
    %{Browse @SemStack }
-   @SemStack.1
+   @SemStack
    %{Driver}
 end
 
@@ -34,13 +34,13 @@ fun {Variable_Dec Ident S E}
    SemStack:=@SemStack.2
    {Dictionary.put E Ident random}   %Change random?
    SemStack:=tuple(statements:S environment:E)|@SemStack
-   @SemStack.1
+   @SemStack
 end
 
 fun {Variable_Bind IdentL IdentR E}
    SemStack:=@SemStack.2
    %Update Store
-   @SemStack.1
+   @SemStack
 end
 
 fun {Pop}
