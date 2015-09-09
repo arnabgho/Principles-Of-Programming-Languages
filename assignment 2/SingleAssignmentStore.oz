@@ -1,6 +1,7 @@
-declare KeyValueStore CurrentKey in 
+declare KeyValueStore
 KeyValueStore={Dictionary.new}
 CurrentKey={NewCell 0}
+
 
 declare
 fun {ReturnRootKey Key}
@@ -10,11 +11,13 @@ fun {ReturnRootKey Key}
    end
 end
 
-declare
+
+
+declare 
 proc{BindValueToKeyInSAS Key Val}
    case {Dictionary.get KeyValueStore {ReturnRootKey Key}}
    of equivalence(X) then {Dictionary.put KeyValueStore X Val }
-   [] X then raise alreadyAssigned(Key Val X ) end
+   [] X then  raise alreadyAssigned(Key Val X ) end
    end
 end
 
@@ -29,8 +32,7 @@ end
 
 declare
 fun {AddKeyToSAS}
-   {Browse @CurrentKey}
-   @CurrentKey := @CurrentKey+1
+   CurrentKey := @CurrentKey+1
    {Dictionary.put KeyValueStore @CurrentKey equivalence(@CurrentKey)}
    @CurrentKey
 end

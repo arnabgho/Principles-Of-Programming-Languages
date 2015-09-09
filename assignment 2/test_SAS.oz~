@@ -1,4 +1,6 @@
-\insert 'SingleAssignmentStore.oz'
+/insert 'SingleAssignmentStore.oz'
 
-{Browse AddKeyToSAS} 
-
+local X in
+   X={AddKeyToSAS}
+   {Browse X}
+end
