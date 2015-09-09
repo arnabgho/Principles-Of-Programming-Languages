@@ -2,7 +2,6 @@ declare KeyValueStore
 KeyValueStore={Dictionary.new}
 CurrentKey={NewCell 0}
 
-
 declare
 fun {ReturnRootKey Key}
    case KeyValueStore.Key
@@ -11,8 +10,6 @@ fun {ReturnRootKey Key}
    end
 end
 
-
-
 declare 
 proc{BindValueToKeyInSAS Key Val}
    case {Dictionary.get KeyValueStore {ReturnRootKey Key}}
@@ -20,7 +17,6 @@ proc{BindValueToKeyInSAS Key Val}
    [] X then  raise alreadyAssigned(Key Val X ) end
    end
 end
-
 
 declare
 proc {BindRefToKeyInSAS Key RefKey}
@@ -41,7 +37,7 @@ end
 declare
 fun {RetrieveFromSAS Key}
    case {Dictionary.member KeyValueStore Key}
-   of false then raise keyNotFoundException (Key) end
+   of false then raise keyNotFoundException(Key) end
    else {Dictionary.get KeyValueStore {ReturnRootKey Key}}
    end
 end
