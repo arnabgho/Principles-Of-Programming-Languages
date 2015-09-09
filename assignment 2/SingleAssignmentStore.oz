@@ -33,7 +33,7 @@ end
 
 declare
 fun {AddKeyToSAS}
-   @CurrentKey := @CurrentKey+1
+   CurrentKey := @CurrentKey+1
    {Dictionary.put KeyValueStore @CurrentKey equivalence(@CurrentKey)}
    @CurrentKey
 end
