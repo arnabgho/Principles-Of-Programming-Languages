@@ -10,15 +10,11 @@ fun {No_Op}
    %{Browse @SemStack }
    %{Driver}
 end
-%{Browse @SemStack}
-%{Browse {No_Op}}
-%{Browse @SemStack}
 
-%Days = {Dictionary.new}
 
 fun {Handle Statements}
    SemStack:=[tuple(statements:Statements environment:{Dictionary.new})]
-   %nil
+   {Driver}
 end
 
 fun {Composition S1 S2 E}
@@ -67,4 +63,4 @@ fun {Driver}
 end
 
 %{Handle  [ [nop] [nop] ]}
-{Browse {Driver}}
+{Browse {Handle [[nop] [nop] [nop]]}}
