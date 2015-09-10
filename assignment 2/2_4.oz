@@ -53,6 +53,7 @@ proc {Pop}
 end
 
 proc {Value_Bind Ident V E}
+   SemStack:=@SemStack.2
    {Unify ident(Ident) V E}
    {Print}
 end
@@ -69,7 +70,7 @@ proc {Driver}
 	 [] nop|nil then  {No_Op} {Driver}
 	 [] localvar|ident(Ident)|S_bar then {Variable_Dec Ident S_bar E} {Driver}
 	 [] bind|ident(IdentL)|ident(IdentR)|nil then {Variable_Bind IdentL IdentR E} {Driver}
-	 [] bind|ident(Ident)|V then {Value_Bind Ident V.1 E} {Driver}
+	 [] bind|ident(Ident)|V then {Browse V.1} {Value_Bind Ident V.1 E} {Driver}
 	 [] S1|S2 then  {Composition S1 S2 E} {Driver}
 	 end
       end
@@ -86,4 +87,9 @@ end
 %{Browse {Handle [bind ident(x) ident(y)]}}
 %{Handle [localvar ident(x) [localvar ident(y) [localvar ident(x) [nop]]]]}
 %{Handle [localvar ident(x) [localvar ident(y) [bind ident(x) ident(y)]]]}
+%{Handle [localvar ident(x) [localvar ident(y) [[bind ident(x) literal(100)] [bind ident(y) [record literal(a) [[literal(1) ident(x1)] [literal(2) ident(x2)]]]]]]]}
+%{Handle [localvar ident(x) [localvar ident(y) [[bind ident(x) literal(100)] [bind ident(y) literal(200)]]]]}
+%{Handle [localvar ident(x) [bind ident(x) literal(100)]]}
+%{Handle [localvar ident(x) [localvar ident(y) [[bind ident(x) literal(100)] [bind ident(y) [record literal(a) [[literal(1) ident(x1)] [literal(2) ident(x2)]]]]]]]}
+%{Browse {Dictionary.entries KeyValueStore}}
 {Handle [localvar ident(x) [localvar ident(y) [[bind ident(x) literal(100)] [bind ident(y) [record literal(a) [[literal(1) ident(x1)] [literal(2) ident(x2)]]]]]]]}
