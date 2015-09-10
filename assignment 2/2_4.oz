@@ -1,23 +1,33 @@
 \insert 'Unify.oz'
 
-declare Dummy Pop SemStack Driver No_Op Composition Handle Variable_Dec Variable_Bind  Value_Bind in
+declare Print Dummy Pop SemStack Driver No_Op Composition Handle Variable_Dec Variable_Bind  Value_Bind in
 SemStack = {NewCell [tuple(statements:[[nop] [nop] [nop]] environment:{Dictionary.new})]}
 Dummy = {NewCell 0}
 
+proc {Print}
+   {Browse {@SemStack.1.statements}}
+   %{Browse {Dictionary.entries @SemStack.1.environment}}
+end
+
 fun {No_Op}
    SemStack:=@SemStack.2
-   @SemStack
+   {Print}
+   %@SemStack
+   1
 end
 
 fun {Handle Statements}
    SemStack:=[tuple(statements:Statements environment:{Dictionary.new})]
-   {Driver}
+   {Print}
+   1|{Driver}
 end
 
 fun {Composition S1 S2 E}
    SemStack:=@SemStack.2
    SemStack:=tuple(statements:S1 environment:E) | tuple(statements:S2 environment:E)  | @SemStack
-   @SemStack
+   {Print}
+   %@SemStack
+   1
 end
 
 fun {Variable_Dec Ident S E}
@@ -27,24 +37,31 @@ fun {Variable_Dec Ident S E}
 	   {Dictionary.put E Ident X}
 	   SemStack:=tuple(statements:S environment:E)|@SemStack
 	   %{Dictionary.get E Ident}  %Print the value in dict E corresponding to key Ident
-	   @SemStack
+           {Print}
+           %@SemStack
+      1
    end
 end
 
 fun {Variable_Bind IdentL IdentR E}
    SemStack:=@SemStack.2
    {Unify ident(IdentL) ident(IdentR) E}
-   @SemStack
+   {Print}
+   %@SemStack
+   1
 end
 
 fun {Pop}
    SemStack:=@SemStack.2
-   @SemStack
+   %@SemStack
+   1
 end
 
 fun {Value_Bind Ident V E}
    {Unify ident(Ident) V E}
-   @SemStack
+   %@SemStack
+   {Print}
+   1
 end
 
 fun {Driver}
@@ -68,4 +85,5 @@ end
 
 %{Browse {Handle [[nop] [nop] [nop]]}}
 %{Browse {Handle [bind ident(x) ident(y)]}}
-{Browse {Handle [localvar ident(x) [localvar ident(y) [localvar ident(x) [nop]]]]}}
+%{Browse {Handle [localvar ident(x) [localvar ident(y) [localvar ident(x) [nop]]]]}}
+{Print}
