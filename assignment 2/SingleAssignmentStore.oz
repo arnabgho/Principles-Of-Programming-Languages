@@ -14,7 +14,7 @@ declare
 proc{BindValueToKeyInSAS Key Val}
    case {Dictionary.get KeyValueStore {ReturnRootKey Key}}
    of equivalence(X) then {Dictionary.put KeyValueStore X Val }
-   [] X then  raise alreadyAssigned(Key Val X ) end
+   [] X then  raise alreadyAssigned(Key Val X) end
    end
 end
 
