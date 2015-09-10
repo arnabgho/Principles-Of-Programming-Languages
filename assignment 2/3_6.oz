@@ -1,6 +1,6 @@
 \insert 'Unify.oz'
 
-declare Iterate Record Print Dummy Pop SemStack Driver No_Op Composition Handle Variable_Dec Variable_Bind  Value_Bind in
+declare Conditional  Iterate Record Print Dummy Pop SemStack Driver No_Op Composition Handle Variable_Dec Variable_Bind  Value_Bind in
 SemStack = {NewCell [tuple(statements:[[nop] [nop] [nop]] environment:{Dictionary.new})]}
 Dummy = {NewCell 0}
 
@@ -84,6 +84,20 @@ proc {Value_Bind Ident V E}
    {Print}
 end
 
+proc {Conditional Ident S1 S2 E}
+   SemStack:=@SemStack.2
+   if {Dictionary.member E Ident}==false
+   then raise keyNotFoundEnvironmentException(Ident) end
+   else
+      case {RetrieveFromSAS E.Ident}
+      of true then  SemStack:=tuple(statements:S1 environment:E) | @SemStack
+      [] false then  SemStack:=tuple(statements:S2 environment:E) | @SemStack
+      else raise keyNotBoundBoolean(Ident) end
+      end
+   end	 
+end
+
+
 proc {Driver}
    local X S E in
       if @SemStack==nil then skip
@@ -97,6 +111,7 @@ proc {Driver}
 	 [] localvar|ident(Ident)|S_bar then {Variable_Dec Ident S_bar E} {Driver}
 	 [] bind|ident(IdentL)|ident(IdentR)|nil then {Variable_Bind IdentL IdentR E} {Driver}
 	 [] bind|ident(Ident)|V then {Value_Bind Ident V.1 E} {Driver}
+	 [] conditional | ident(Ident) | S1 | S2 then {Conditional Ident S1 S2.1 E} {Driver} 
 	 [] S1|S2 then  {Composition S1 S2 E} {Driver}
 	 end
       end
@@ -118,4 +133,6 @@ end
 %{Handle [localvar ident(x) [bind ident(x) literal(100)]]}
 %{Handle [localvar ident(x) [localvar ident(y) [[bind ident(x) literal(100)] [bind ident(y) [record literal(a) [[literal(1) ident(x1)] [literal(2) ident(x2)]]]]]]]}
 %{Browse {Dictionary.entries KeyValueStore}}
-{Handle [localvar ident(x) [localvar ident(y) [[bind ident(x) literal(100)] [bind ident(y) [record literal(a) [[literal(1) ident(x1)] [literal(2) ident(x2)]]]]]]]}
+%{Handle [localvar ident(x) [localvar ident(y) [[bind ident(x) literal(100)] [bind ident(y) [record literal(a) [[literal(1) ident(x1)] [literal(2) ident(x2)]]]]]]]}
+
+{Handle [conditional ident(x) s1 s2]}
