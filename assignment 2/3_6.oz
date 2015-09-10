@@ -90,8 +90,8 @@ proc {Conditional Ident S1 S2 E}
    then raise keyNotFoundEnvironmentException(Ident) end
    else
       case {RetrieveFromSAS E.Ident}
-      of true then  SemStack:=tuple(statements:S1 environment:E) | @SemStack
-      [] false then  SemStack:=tuple(statements:S2 environment:E) | @SemStack
+      of literal(true) then  SemStack:=tuple(statements:S1 environment:E) | @SemStack
+      [] literal(false) then  SemStack:=tuple(statements:S2 environment:E) | @SemStack
       else raise keyNotBoundBoolean(Ident) end
       end
    end	 
@@ -135,4 +135,4 @@ end
 %{Browse {Dictionary.entries KeyValueStore}}
 %{Handle [localvar ident(x) [localvar ident(y) [[bind ident(x) literal(100)] [bind ident(y) [record literal(a) [[literal(1) ident(x1)] [literal(2) ident(x2)]]]]]]]}
 
-{Handle [conditional ident(x) s1 s2]}
+{Handle [localvar ident(x) [localvar ident(y) [[bind ident(x) literal(true)] [conditional ident(x) [bind ident(y) literal(10)] [bind ident(y) literal(20)]]]]]}
