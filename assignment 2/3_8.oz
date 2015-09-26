@@ -85,7 +85,7 @@ proc {Value_Bind Ident V E}
    local Val in
       case V.1 
       of record then {Record V E} {Unify ident(Ident) V E}
-      [] proc|S then Val = {Closure_Driver V.2.1 E V.2.2} {Unify ident(Ident) [V Val] E}
+      [] proceed then Val = {Closure_Driver V.2.1 E V.2.2} {Unify ident(Ident) [V Val] E}
       else {Unify ident(Ident) V E} 
       end
    end
@@ -168,4 +168,6 @@ end
 %{Handle [localvar ident(x) [localvar ident(y) [[bind ident(x) literal(100)] [bind ident(y) [record literal(a) [[literal(1) ident(x1)] [literal(2) ident(x2)]]]]]]]}
 %{Handle [localvar ident(x) [localvar ident(y) [[bind ident(x) literal(true)] [conditional ident(x) [bind ident(y) literal(10)] [bind ident(y) literal(20)]]]]]}
 %{Handle [localvar ident(x) [localvar ident(y) [[bind ident(y) [record literal(a) [[literal(1) ident(x1)] [literal(2) ident(x2)]]]] [match ident(y) [record literal(a) [[literal(1) ident(x3)] [literal(2) ident(x4)]]] [bind ident(x) literal(10)] [bind ident(x) literal(20)]]]]]}
-{Handle [localvar ident(x) [localvar ident(y) [[bind ident(x) literal(10)] [bind ident(x) ident(y)]]]]}
+%{Handle [localvar ident(x) [localvar ident(y) [[bind ident(x) literal(10)] [bind ident(x) ident(y)]]]]}
+%{Handle [localvar ident(x) [bind ident(x) [proceed [y] [[nop]]]]]}
+{Handle [localvar ident(x) [bind ident(x) [proceed [y] [bind ident(x) ident(y)]]]]}
