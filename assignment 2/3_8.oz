@@ -1,7 +1,7 @@
 \insert 'Unify.oz'
 \insert 'Closure.oz'
 
-declare Case Set Conditional  Iterate Record Print Dummy Pop SemStack Driver No_Op Composition Handle Variable_Dec Variable_Bind  Value_Bind in
+declare Proc_Call Case Set Conditional  Iterate Record Print Dummy Pop SemStack Driver No_Op Composition Handle Variable_Dec Variable_Bind  Value_Bind in
 SemStack = {NewCell [tuple(statements:[[nop] [nop] [nop]] environment:{Dictionary.new})]}
 Dummy = {NewCell 0}
 
@@ -85,7 +85,7 @@ proc {Value_Bind Ident V E}
    local Val in
       case V.1 
       of record then {Record V E} {Unify ident(Ident) V E}
-      [] proceed then Val = {Closure_Driver V.2.1 E V.2.2} {Unify ident(Ident) [V Val] E}
+      [] proceed then Val = {Closure_Driver V.2.1 E V.2.2} {BindValueToKeyInSAS E.Ident [V Val]} %{Unify ident(Ident) [V Val] E}
       else {Unify ident(Ident) V E} 
       end
    end
@@ -130,6 +130,32 @@ proc {Case X P S1 S2 E}
    end
 end
 
+proc {IterateAdd Env Args E}
+   case Args
+   of ident(H)|T then {Dictionary.put Env E.H} {IterateAdd Env T E}
+   [] nil then skip
+   end
+end
+
+proc {Proc_Call Proc Args E}
+   if {Dictionary.member E Proc} then
+      local Proceed in
+	 Proceed = {RetrieveFromSAS E.Proc}
+         if Proceed.1.1 == proceed then
+	    if {List.length Args} == {List.length Proceed.1.2.1} then
+	       local Env in
+		  Env = {Dictionary.clone Proceed.2.1}
+		  {IterateAdd Env Args E}
+	       end
+	    else raise numberOfArgsDontMatch(Proc) end
+	    end
+         else raise invalidProc(Proc) end
+         end
+      end
+   else raise noProcInEnvironment(Proc)	end
+   end
+end
+
 proc {Driver}
    local X S E in
       if @SemStack==nil then skip
@@ -144,7 +170,8 @@ proc {Driver}
 	 [] bind|ident(IdentL)|ident(IdentR)|nil then {Variable_Bind IdentL IdentR E} {Driver}
 	 [] bind|ident(Ident)|V then {Value_Bind Ident V.1 E} {Driver}
 	 [] conditional | ident(Ident) | S1 | S2 then {Conditional Ident S1 S2.1 E} {Driver} 
-	 [] match|ident(X)|P|S1|S2 then {Case X P S1 S2 E} {Driver}
+	 [] match|ident(Ident)|P|S1|S2 then {Case Ident P S1 S2 E} {Driver}
+	 [] apply|ident(Ident)|S then {Proc_Call Ident S E} {Driver}
 	 [] S1|S2 then  {Composition S1 S2 E} {Driver}
 	 end
       end
@@ -170,4 +197,4 @@ end
 %{Handle [localvar ident(x) [localvar ident(y) [[bind ident(y) [record literal(a) [[literal(1) ident(x1)] [literal(2) ident(x2)]]]] [match ident(y) [record literal(a) [[literal(1) ident(x3)] [literal(2) ident(x4)]]] [bind ident(x) literal(10)] [bind ident(x) literal(20)]]]]]}
 %{Handle [localvar ident(x) [localvar ident(y) [[bind ident(x) literal(10)] [bind ident(x) ident(y)]]]]}
 %{Handle [localvar ident(x) [bind ident(x) [proceed [y] [[nop]]]]]}
-{Handle [localvar ident(x) [bind ident(x) [proceed [ident(x)] [bind ident(x) ident(x)]]]]}
+{Handle [localvar ident(x) [bind ident(x) [proceed [ident(y)] [bind ident(y) ident(x)]]]]}
