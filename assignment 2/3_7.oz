@@ -163,4 +163,5 @@ end
 %{Handle [localvar ident(x) [localvar ident(y) [[bind ident(x) literal(100)] [bind ident(y) [record literal(a) [[literal(1) ident(x1)] [literal(2) ident(x2)]]]]]]]}
 %{Handle [localvar ident(x) [localvar ident(y) [[bind ident(x) literal(100)] [bind ident(y) [record literal(a) [[literal(1) ident(x1)] [literal(2) ident(x2)]]]]]]]}
 %{Handle [localvar ident(x) [localvar ident(y) [[bind ident(x) literal(true)] [conditional ident(x) [bind ident(y) literal(10)] [bind ident(y) literal(20)]]]]]}
-{Handle [localvar ident(x) [localvar ident(y) [[bind ident(y) [record literal(a) [[literal(1) ident(x1)] [literal(2) ident(x2)]]]] [match ident(y) [record literal(a) [[literal(1) ident(x3)] [literal(2) ident(x4)]]] [bind ident(x) literal(10)] [bind ident(x) literal(20)]]]]]}
+%{Handle [localvar ident(x) [localvar ident(y) [[bind ident(y) [record literal(a) [[literal(1) ident(x1)] [literal(2) ident(x2)]]]] [match ident(y) [record literal(a) [[literal(1) ident(x3)] [literal(2) ident(x4)]]] [bind ident(x) literal(10)] [bind ident(x) literal(20)]]]]]}
+{Handle [localvar ident(x) [localvar ident(y) [[bind ident(x) literal(10)] [bind ident(x) ident(y)]]]]}

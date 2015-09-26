@@ -20,20 +20,9 @@ end
 
 declare
 proc {BindRefToKeyInSAS Key RefKey}
-   local X Y ValX ValY in
+   local X Y in
       X={ReturnRootKey Key}
       Y={ReturnRootKey RefKey}
-      ValX={Dictionary.get KeyValueStore X}
-      ValY={Dictionary.get KeyValueStore Y}
-
-      if ValX==equivalence(X) then  {Dictionary.put KeyValueStore X reference(Y)}
-      else if ValY==equivalence(Y) then  {Dictionary.put KeyValueStore Y reference(X)}
-	   else case ValX
-		of ValY then  {Dictionary.put KeyValueStore X reference(Y)}
-		else raise differentValuesTryingToBeAssigned(ValX ValY) end
-		end
-	   end
-      end
       {Dictionary.put KeyValueStore X reference(Y)}
    end
 end
