@@ -60,7 +60,7 @@ in
       % unifying already unified expressions.
       % Code modified from Siddharth Agarwal's code
       %==================
-      if {List.member [Exp1 Exp2] UnificationsSoFar}
+      if {List.member [[Exp1 Exp2]] UnificationsSoFar}
       then skip
       else
 	 Unifications = {List.append [Exp1 Exp2] UnificationsSoFar}
