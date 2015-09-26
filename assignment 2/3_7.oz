@@ -69,9 +69,13 @@ proc {Iterate X E}
 end
 
 proc {Record Val E}
-   local X in
-      X = Val.2.2.1
-      {Iterate X E}
+   if Val.1==record then 
+      local X in
+         X = Val.2.2.1    %Passing [[literal(feature1) ident(x1)] ... [literal(featuren) ident(xn)]] to Iterate
+         {Iterate X E}
+      end
+   else
+      skip
    end
 end
 
