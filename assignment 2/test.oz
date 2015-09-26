@@ -42,3 +42,15 @@ SemStack = {NewCell [ tuple(statements:[[nop] [nop] [nop]] environment:{Dictiona
 {Browse {NewName}}
 {Browse {NewName}}
 
+declare
+fun {Pattern_Match X Y}
+   {Browse X}
+   case X Y
+   of H|T H|T then "hello"
+   else "bye"
+   end
+end
+
+{Browse {Pattern_Match [0] [1]  }}
+
+
