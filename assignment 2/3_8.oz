@@ -228,12 +228,48 @@ end
 %	]
 %}
 
-{Handle [localvar ident(x)
- [[localvar ident(y)
-   [[localvar ident(x)
-     [[bind ident(x) ident(y)]
-      [bind ident(y) literal(true) ]
-      [conditional ident(y) [nop]
-       [bind ident(x) literal(true)]]]]
-    [bind ident(x) literal(35)]]]]]
-}
+%{Handle [localvar ident(x)
+% [[localvar ident(y)
+%   [[localvar ident(x)
+%     [[bind ident(x) ident(y)]
+%      [bind ident(y) literal(true) ]
+%      [conditional ident(y) [nop]
+%       [bind ident(x) literal(true)]]]]
+%    [bind ident(x) literal(35)]]]]]
+%}
+
+%{Handle [localvar ident(x)
+%	 [bind ident(x) literal(10)]
+%	 [bind ident(x) literal(10)]
+%	]
+% }
+
+%{Handle [localvar ident(foo)
+%  [localvar ident(result)
+%   [[bind ident(foo) literal(true)]
+%    [conditional ident(foo) [ bind ident(result) literal(true)]
+%     [bind ident(result) literal(false)]]
+%    [bind ident(result) literal(false)]]]]
+%}
+
+%{Handle [localvar ident(foo)
+%  [localvar ident(result)
+%   [[bind ident(foo) literal(false)]
+%    [conditional ident(foo) [bind ident(result) literal(true)]
+%     [bind ident(result) literal(false)]]
+%    [bind ident(result) literal(false)]]]]
+%}
+
+%{Handle [localvar ident(x)
+%	 [localvar ident(p)[localvar ident(q) [ bind ident(p) literal(1)] [bind ident(q) literal(2)]
+% [[bind ident(x)
+%   [proceed [ident(y) ident(x)] [nop]]]]
+%	 [apply ident(x) ident(p) ident(q)]]]]
+%}
+
+%[localvar ident(x)
+% [[bind ident(x)
+%   [proceed [ident(y) ident(x)] [nop]]]
+%  [apply ident(x)
+%   literal(1)
+%   [record literal(label) [literal(f1) literal(1)]]]]]
