@@ -1,7 +1,7 @@
 \insert 'Unify.oz'
 \insert 'Closure.oz'
 
-declare Proc_Call Case Set Conditional  Iterate Record Print Dummy Pop SemStack Driver No_Op Composition Handle Variable_Dec Variable_Bind  Value_Bind in
+declare IterateAdd Proc_Call Case Set Conditional  Iterate Record Print Dummy Pop SemStack Driver No_Op Composition Handle Variable_Dec Variable_Bind  Value_Bind in
 SemStack = {NewCell [tuple(statements:[[nop] [nop] [nop]] environment:{Dictionary.new})]}
 Dummy = {NewCell 0}
 
@@ -130,9 +130,13 @@ proc {Case X P S1 S2 E}
    end
 end
 
-proc {IterateAdd Env Args E}
-   case Args
-   of ident(H)|T then {Dictionary.put Env E.H} {IterateAdd Env T E}
+proc {IterateAdd Env FormalPara ActualPara E}
+   case ActualPara
+   of ident(H)|T then
+      case FormalPara
+      of ident(U)|V then {Dictionary.put Env U E.H} {IterateAdd Env V T E}
+      else raise improperParameters() end
+      end
    [] nil then skip
    end
 end
@@ -145,7 +149,9 @@ proc {Proc_Call Proc Args E}
 	    if {List.length Args} == {List.length Proceed.1.2.1} then
 	       local Env in
 		  Env = {Dictionary.clone Proceed.2.1}
-		  {IterateAdd Env Args E}
+		  {IterateAdd Env Proceed.1.2.1 Args E}    % Proceed.1.2.1 is the formal parameters of proceed
+		  SemStack:=@SemStack.2
+		  SemStack:=tuple(statements:Proceed.1.2.2 environment:Env) | @SemStack
 	       end
 	    else raise numberOfArgsDontMatch(Proc) end
 	    end
@@ -197,4 +203,18 @@ end
 %{Handle [localvar ident(x) [localvar ident(y) [[bind ident(y) [record literal(a) [[literal(1) ident(x1)] [literal(2) ident(x2)]]]] [match ident(y) [record literal(a) [[literal(1) ident(x3)] [literal(2) ident(x4)]]] [bind ident(x) literal(10)] [bind ident(x) literal(20)]]]]]}
 %{Handle [localvar ident(x) [localvar ident(y) [[bind ident(x) literal(10)] [bind ident(x) ident(y)]]]]}
 %{Handle [localvar ident(x) [bind ident(x) [proceed [y] [[nop]]]]]}
-{Handle [localvar ident(x) [bind ident(x) [proceed [ident(y)] [bind ident(y) ident(x)]]]]}
+%{Handle [localvar ident(x) [bind ident(x) [proceed [ident(y)] [bind ident(y) ident(x)]]]]}
+{Handle [localvar ident(z) [
+			    [localvar ident(x) [
+						[localvar ident(t)
+						 [bind ident(t) literal(10)]
+						 [
+					          [bind ident(x) [proceed [ident(y)] [bind ident(y) ident(t)]]]
+						 ]
+						]
+						[apply ident(x) ident(z)]
+					       ]
+			    ]
+			   ]
+	]
+}
