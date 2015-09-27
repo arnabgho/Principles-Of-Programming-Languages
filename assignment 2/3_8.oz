@@ -107,11 +107,11 @@ proc {Case X P S1 S2 E}
 end
 
 proc {IterateAdd Env FormalPara ActualPara E}
-   case ActualPara
-   of ident(H)|T then
-      case FormalPara
-      of ident(U)|V then {Dictionary.put Env U E.H} {IterateAdd Env V T E}
-      else raise improperParameters() end
+   case FormalPara
+   of ident(U)|V then
+      case ActualPara
+      of ident(H)|T then {Dictionary.put Env U E.H} {IterateAdd Env V T E}
+      [] O|P then {Dictionary.put Env U {AddKeyToSAS}} {Unify ident(U) O Env} {IterateAdd Env V P E} %raise improperParameters() end
       end
    [] nil then skip
    end
@@ -151,7 +151,8 @@ proc {Driver}
 	 [] localvar|ident(Ident)|S_bar then {Variable_Dec Ident S_bar E} {Driver}
 	 [] bind|ident(IdentL)|ident(IdentR)|nil then {Variable_Bind IdentL IdentR E} {Driver}
 	 [] bind|ident(Ident)|V then {Value_Bind Ident V.1 E} {Driver}
-	 [] conditional | ident(Ident) | S1 | S2 then {Conditional Ident S1 S2.1 E} {Driver} 
+	 [] bind|V|ident(Ident)|nil then {Value_Bind Ident V E} {Driver}
+	 [] conditional|ident(Ident) | S1 | S2 then {Conditional Ident S1 S2.1 E} {Driver}
 	 [] match|ident(Ident)|P|S1|S2 then {Case Ident P S1 S2 E} {Driver}
 	 [] apply|ident(Ident)|S then {Proc_Call Ident S E} {Driver}
 	 [] S1|S2 then  {Composition S1 S2 E} {Driver}
@@ -257,8 +258,31 @@ end
 %    [bind ident(bar) [record literal(person) [[literal(name) ident(foo)]]]]
 %    [bind ident(foo) ident(bar)]]]]}  %Infinite loop??
 
-{Handle [localvar ident(foo)
-  [localvar ident(bar)
-   [[bind ident(foo) [record literal(person) [[literal(name) ident(foo)]]]]
-    [bind ident(bar) [record literal(person) [[literal(name) ident(bar)]]]]
-    [bind ident(foo) ident(bar)]]]]}
+%{Handle [localvar ident(foo)
+%  [localvar ident(bar)
+%   [[bind ident(foo) [record literal(person) [[literal(name) ident(foo)]]]]
+%    [bind ident(bar) [record literal(person) [[literal(name) ident(bar)]]]]
+%    [bind ident(foo) ident(bar)]]]]}
+
+%{Handle [localvar ident(x)
+% [[bind ident(x)
+%   [proceed [ident(y) ident(x)] [nop]]]
+%  [apply ident(x) literal(1) literal(2)]
+% ]
+%]}
+
+%{Handle [localvar ident(x)
+% [[bind ident(x)
+%   [proceed [ident(y) ident(x)] [nop]]]
+%  [apply ident(x)
+%   literal(1) [record literal(label) [[literal(f1) literal(p)]]]
+%   ]]]}
+
+%{Handle [localvar ident(foo)
+% [localvar ident(bar)
+%  [localvar ident(quux)
+%   [[bind ident(bar) [proceed [ident(baz)]
+%		      [bind [record literal(person) [[literal(age) ident(foo)]]] ident(baz)]]]
+%    [apply ident(bar) ident(quux)]
+%    [bind [record literal(person) [[literal(age) literal(40)]]] ident(quux)]
+%    [bind literal(42) ident(foo)]]]]]} % Closure should also handle records and procedures

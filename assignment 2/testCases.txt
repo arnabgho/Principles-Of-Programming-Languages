@@ -7,6 +7,8 @@
 
 
 %%-------------- Record bind ----------------
+%It's complete. 2nd and 3rd seems to be going to infinite loop
+
 [localvar ident(x)
  [localvar ident(y)
   [localvar ident(z)
@@ -62,17 +64,16 @@
 [localvar ident(x)
  [[bind ident(x)
    [proceed [ident(y) ident(x)] [nop]]]
-  [localvar ident(p) [localvar ident(q) [[bind ident(p) literal(1)] [bind ident(q) literal(2)] [apply ident(x) ident(p) ident(q)]]]]
+  [apply ident(x) literal(1) literal(2)]
  ]
 ]
 
 [localvar ident(x)
  [[bind ident(x)
    [proceed [ident(y) ident(x)] [nop]]]
-  [localvar ident(p) [localvar ident(q) [[bind ident(p) literal(1)] [bind ident(q) [record literal(label) [[literal(f1) ident(p)]]]]
   [apply ident(x)
-   ident(p) ident(q)
-   ]]]]]]
+   literal(1) [record literal(label) [[literal(f1) literal(p)]]]
+   ]]]
    
 [localvar ident(foo)
  [localvar ident(bar)
