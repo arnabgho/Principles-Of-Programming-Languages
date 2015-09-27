@@ -28,3 +28,8 @@ end
 {PrettyPrint 3 12}
 {Browse Months.1}
 {Browse {Dictionary.member Days 20}}
+
+local X in
+   X={Dictionary.clone Days}
+   {Browse {Dictionary.keys X}}
+end

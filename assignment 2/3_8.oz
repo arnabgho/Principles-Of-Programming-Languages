@@ -24,24 +24,25 @@ end
 
 proc {Composition S1 S2 E}
    SemStack:=@SemStack.2
-   local X Y in
-      X={Dictionary.clone E}
-      Y={Dictionary.clone E}
+   local NewDictX NewDictY in
+      NewDictX={Dictionary.clone E}
+      NewDictY={Dictionary.clone E}
       if S2 == nil then
-	 SemStack:=tuple(statements:S1 environment:X) | @SemStack
+	 SemStack:=tuple(statements:S1 environment:NewDictX) | @SemStack
       else
-	 SemStack:=tuple(statements:S1 environment:X) | tuple(statements:S2 environment:Y)  | @SemStack
+	 SemStack:=tuple(statements:S1 environment:NewDictX) | tuple(statements:S2 environment:NewDictY)  | @SemStack
       end
-   end
+   end 
    {Print}
 end
 
 proc {Variable_Dec Ident S E}
-   local X in
+   local X NewDictY in
    	   X={AddKeyToSAS}
-	   SemStack:=@SemStack.2
-	   {Dictionary.put E Ident X}
-	   SemStack:=tuple(statements:S environment:E)|@SemStack
+           SemStack:=@SemStack.2
+           NewDictY={Dictionary.clone E}
+	   {Dictionary.put NewDictY Ident X}
+	   SemStack:=tuple(statements:S environment:NewDictY)|@SemStack
            {Print}
    end
 end
@@ -65,9 +66,12 @@ proc {Iterate X E}
       else
 	 Y = X.2
          case X.1.2.1
-         of ident(A) then
-	    {Dictionary.put E A {AddKeyToSAS}}
-	    {Iterate Y E}
+	 of ident(A) then
+	    local NewDict in
+	       NewDict={Dictionary.clone E}
+	       {Dictionary.put NewDict A {AddKeyToSAS}}
+	       {Iterate Y NewDict}
+	    end
          end
       end
    end
@@ -208,12 +212,63 @@ end
 %{Handle [localvar ident(x) [localvar ident(y) [[bind ident(x) literal(10)] [bind ident(x) ident(y)]]]]}
 %{Handle [localvar ident(x) [bind ident(x) [proceed [y] [[nop]]]]]}
 %{Handle [localvar ident(x) [bind ident(x) [proceed [ident(y)] [bind ident(y) ident(x)]]]]}
-%{Handle [localvar ident(z) [[localvar ident(x) [[localvar ident(t)[bind ident(t) literal(10)][[bind ident(x) [proceed [ident(y)] [bind ident(y) ident(t)]]]]][apply ident(x) ident(z)]]]]]}
-{Handle [localvar ident(x)
- [[localvar ident(y)
-   [[localvar ident(x)
-     [[bind ident(x) ident(y)]
-      [bind ident(y) literal(true)]
-      [conditional ident(y) [nop]
-       [bind ident(x) literal(true)]]]]
-    [bind ident(x) literal(35)]]]]]}
+%{Handle [localvar ident(z) [
+%			    [localvar ident(x) [
+%						[localvar ident(t)
+%						 [bind ident(t) literal(10)]
+%						 [
+%					          [bind ident(x) [proceed [ident(y)] [bind ident(y) ident(t)]]]
+%						 ]
+%						]
+%						[apply ident(x) ident(z)]
+%					       ]
+%			    ]
+%			   ]
+%	]
+%}
+
+%{Handle [localvar ident(x)
+% [[localvar ident(y)
+%   [[localvar ident(x)
+%     [[bind ident(x) ident(y)]
+%      [bind ident(y) literal(true) ]
+%      [conditional ident(y) [nop]
+%       [bind ident(x) literal(true)]]]]
+%    [bind ident(x) literal(35)]]]]]
+%}
+
+%{Handle [localvar ident(x)
+%	 [bind ident(x) literal(10)]
+%	 [bind ident(x) literal(10)]
+%	]
+% }
+
+%{Handle [localvar ident(foo)
+%  [localvar ident(result)
+%   [[bind ident(foo) literal(true)]
+%    [conditional ident(foo) [ bind ident(result) literal(true)]
+%     [bind ident(result) literal(false)]]
+%    [bind ident(result) literal(false)]]]]
+%}
+
+%{Handle [localvar ident(foo)
+%  [localvar ident(result)
+%   [[bind ident(foo) literal(false)]
+%    [conditional ident(foo) [bind ident(result) literal(true)]
+%     [bind ident(result) literal(false)]]
+%    [bind ident(result) literal(false)]]]]
+%}
+
+%{Handle [localvar ident(x)
+%	 [localvar ident(p)[localvar ident(q) [ bind ident(p) literal(1)] [bind ident(q) literal(2)]
+% [[bind ident(x)
+%   [proceed [ident(y) ident(x)] [nop]]]]
+%	 [apply ident(x) ident(p) ident(q)]]]]
+%}
+
+%[localvar ident(x)
+% [[bind ident(x)
+%   [proceed [ident(y) ident(x)] [nop]]]
+%  [apply ident(x)
+%   literal(1)
+%   [record literal(label) [literal(f1) literal(1)]]]]]
