@@ -60,7 +60,9 @@
     [bind ident(result) literal(false)]]]]
 
 
-%%---------- Procedure definition and application ---------	       
+%%---------- Procedure definition and application ---------	  
+%It's complete except 3rd. Closur need to be improved to deal with records and prodedure values
+
 [localvar ident(x)
  [[bind ident(x)
    [proceed [ident(y) ident(x)] [nop]]]
@@ -88,6 +90,8 @@
 
 
 %%------------ Pattern Match -------------------
+%It's complete
+
 [localvar ident(x)
  [[bind ident(x)
    [record literal(label)
@@ -96,7 +100,7 @@
   [match ident(x)
    [record literal(label)
     [[literal(f1) literal(1)]
-    [literal(f2) literal(2)]]] [nop] [nop]]]]
+    [literal(f2) literal(2)]]] [[nop]] [nop]]]]
    
 [localvar ident(foo)
  [localvar ident(result)
@@ -131,7 +135,3 @@
       [match ident(baz) [record ident(foo) [[ident(bar) ident(quux)]]] [bind ident(result) ident(quux)]
        [bind ident(result) literal(false)]]
       [bind ident(result) literal(25)]]]]]]
-
-
-
-

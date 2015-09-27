@@ -57,6 +57,34 @@ proc {Pop}
    {Print}
 end
 
+proc {Iterate X E}
+   local Y in
+      case X
+      of nil then
+	 skip
+      else
+	 Y = X.2
+         case X.1.2.1
+	 of ident(A) then
+	    {Dictionary.put E A {AddKeyToSAS}}
+	    {Iterate Y E}
+	 else {Iterate Y E}
+	 end
+      end
+   end
+end
+
+proc {Record Val E}
+   if Val.1==record then 
+      local X in
+         X = Val.2.2.1    %Passing [[literal(feature1) ident(x1)] ... [literal(featuren) ident(xn)]] to Iterate
+         {Iterate X E}
+      end
+   else
+      skip
+   end
+end
+
 proc {Value_Bind Ident V E}
    SemStack:=@SemStack.2
    local Val in
@@ -286,3 +314,46 @@ end
 %    [apply ident(bar) ident(quux)]
 %    [bind [record literal(person) [[literal(age) literal(40)]]] ident(quux)]
 %    [bind literal(42) ident(foo)]]]]]} % Closure should also handle records and procedures
+
+%{Handle [localvar ident(x)
+% [[bind ident(x)
+%   [record literal(label)
+%    [[literal(f1) literal(1)]
+%    [literal(f2) literal(2)]]]]
+%  [match ident(x)
+%   [record literal(label)
+%    [[literal(f1) literal(1)]
+%    [literal(f2) literal(2)]]] [[nop]] [nop]]]]}
+
+%{Handle [localvar ident(foo)
+% [localvar ident(result)
+%  [[bind ident(foo) [record literal(bar)
+%		     [[literal(baz) literal(42)]
+%		     [literal(quux) literal(314)]]]]
+%   [match ident(foo) [record literal(bar)
+%		      [[literal(baz) ident(fortytwo)]
+%		      [literal(quux) ident(pitimes100)]]] [bind ident(result) ident(fortytwo)]
+%    [bind ident(result) literal(314)]]
+%   [bind ident(result) literal(42)]
+%   [nop]]]]}
+
+%{Handle [localvar ident(foo)
+%  [localvar ident(bar)
+%   [localvar ident(baz)
+%    [[bind ident(foo) ident(bar)]
+%     [bind literal(20) ident(bar)]
+%     [match ident(foo) literal(21) [bind ident(baz) literal(true)]
+%      [bind ident(baz) literal(false)]]
+%     [bind ident(baz) literal(false)]
+%     [nop]]]]]}
+
+%{Handle [localvar ident(foo)
+%  [localvar ident(bar)
+%   [localvar ident(baz)
+%    [localvar ident(result)
+%     [[bind ident(foo) literal(person)]
+%      [bind ident(bar) literal(age)]
+%      [bind ident(baz) [record literal(person) [[literal(age) literal(25)]]]]
+%      [match ident(baz) [record ident(foo) [[ident(bar) ident(quux)]]] [bind ident(result) ident(quux)]
+%       [bind ident(result) literal(false)]]
+%      [bind ident(result) literal(25)]]]]]]}

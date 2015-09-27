@@ -1,6 +1,9 @@
 TODO:
+1.
 Y=10
 X=10 // Here X and Y should be in same equivalence class
+
+2. Can there be record within record? tough to deal
 
 Our Case statement: We are assuming P to be a record. If X isn't a record, we go for S2. If both X and P aren't record then we go for S1 and if X is a record but P isn't then we go for S2.
 
