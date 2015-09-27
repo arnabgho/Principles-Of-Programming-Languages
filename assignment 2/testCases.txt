@@ -13,11 +13,9 @@
    [[bind ident(x)
      [record literal(label)
       [[literal(f1) ident(y)]
-      [literal(f2) ident(z)]]]
+      [literal(f2) ident(z)]]]]
     [bind ident(x)
-     [record literal(label) [[literal(f1) literal(2)] [literal(f2) literal(1)]]]]]]]
-% Error as ident(x) can only be bound once using the API. Should we still run it correctly by checking it before calling Unify? 
-
+     [record literal(label) [[literal(f1) literal(2)] [literal(f2) literal(1)]]]]]]]]
 
 [localvar ident(foo)
   [localvar ident(bar)
@@ -27,8 +25,8 @@
 
 [localvar ident(foo)
   [localvar ident(bar)
-   [[bind ident(foo) [record literal(person) [literal(name) ident(foo)]]]
-    [bind ident(bar) [record literal(person) [literal(name) ident(bar)]]]
+   [[bind ident(foo) [record literal(person) [[literal(name) ident(foo)]]]]
+    [bind ident(bar) [record literal(person) [[literal(name) ident(bar)]]]]
     [bind ident(foo) ident(bar)]]]]
 
 

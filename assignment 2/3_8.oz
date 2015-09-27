@@ -37,12 +37,11 @@ proc {Composition S1 S2 E}
 end
 
 proc {Variable_Dec Ident S E}
-   local X NewDictY in
+   local X in
    	   X={AddKeyToSAS}
            SemStack:=@SemStack.2
-           NewDictY={Dictionary.clone E}
-	   {Dictionary.put NewDictY Ident X}
-	   SemStack:=tuple(statements:S environment:NewDictY)|@SemStack
+	   {Dictionary.put E Ident X}
+	   SemStack:=tuple(statements:S environment:E)|@SemStack
            {Print}
    end
 end
@@ -58,42 +57,11 @@ proc {Pop}
    {Print}
 end
 
-proc {Iterate X E}
-   local Y in
-      case X
-      of nil then
-	 skip
-      else
-	 Y = X.2
-         case X.1.2.1
-	 of ident(A) then
-	    local NewDict in
-	       NewDict={Dictionary.clone E}
-	       {Dictionary.put NewDict A {AddKeyToSAS}}
-	       {Iterate Y NewDict}
-	    end
-         end
-      end
-   end
-end
-
-proc {Record Val E}
-   if Val.1==record then 
-      local X in
-         X = Val.2.2.1    %Passing [[literal(feature1) ident(x1)] ... [literal(featuren) ident(xn)]] to Iterate
-         {Iterate X E}
-      end
-   else
-      skip
-   end
-end
-
 proc {Value_Bind Ident V E}
    SemStack:=@SemStack.2
    local Val in
       case V.1 
-      of record then {Record V E} {Unify ident(Ident) V E}
-      [] proceed then Val = {Closure_Driver V.2.1 E V.2.2} {BindValueToKeyInSAS E.Ident [V Val]} %{Unify ident(Ident) [V Val] E}
+      of proceed then Val = {Closure_Driver V.2.1 E V.2.2} {BindValueToKeyInSAS E.Ident [V Val]} %{Unify ident(Ident) [V Val] E}
       else {Unify ident(Ident) V E} 
       end
    end
@@ -272,3 +240,25 @@ end
 %  [apply ident(x)
 %   literal(1)
 %   [record literal(label) [literal(f1) literal(1)]]]]]
+
+%{Handle [localvar ident(x)
+% [localvar ident(y)
+%  [localvar ident(z)
+%   [[bind ident(x)
+%     [record literal(label)
+%      [[literal(f1) ident(y)]
+%      [literal(f2) ident(z)]]]]
+%    [bind ident(x)
+%     [record literal(label) [[literal(f1) literal(2)] [literal(f2) literal(1)]]]]]]]]}
+
+%{Handle [localvar ident(foo)
+%  [localvar ident(bar)
+%   [[bind ident(foo) [record literal(person) [[literal(name) ident(bar)]]]]
+%    [bind ident(bar) [record literal(person) [[literal(name) ident(foo)]]]]
+%    [bind ident(foo) ident(bar)]]]]}  %Infinite loop??
+
+{Handle [localvar ident(foo)
+  [localvar ident(bar)
+   [[bind ident(foo) [record literal(person) [[literal(name) ident(foo)]]]]
+    [bind ident(bar) [record literal(person) [[literal(name) ident(bar)]]]]
+    [bind ident(foo) ident(bar)]]]]}
