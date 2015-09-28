@@ -33,7 +33,8 @@ end
 
 proc {ProcAdd S Closure_Env}
    local X in
-      {Closure_Driver S.2.1 Closure_Env S.2.2 X}
+      {Closure S.2.2 X}
+      {Closure_Driver_Helper S.2.1 X}
       {Merge Closure_Env X}
    end
 end

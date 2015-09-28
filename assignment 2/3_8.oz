@@ -14,7 +14,7 @@ proc {Print}
       %{Browse @SemStack}
       {Browse @SemStack.1.statements}
       {Browse {Dictionary.entries @SemStack.1.environment}}
-      {Browse {Dictionary.entries KeyValueStore}}
+      %{Browse {Dictionary.entries KeyValueStore}}
    end
 end
 
@@ -396,12 +396,21 @@ end
 %    [bind ident(x)
 %     [record literal(label) [[literal(f1) [record literal(2nd) [[literal(f5) literal(2)] [literal(f3) literal(1)]]]] [literal(f2) literal(1)]]]]]]]]}
 
-{Handle [localvar ident(x)
- [localvar ident(y)
-  [localvar ident(z)
-   [[bind ident(x)
-     [record literal(label)
-      [[literal(f1) [record literal(2nd) [[literal(f5) ident(y)] [literal(f3) ident(z)]]]]
-      [literal(f2) ident(z)]]]]
-    [match ident(x)
-     [record literal(label) [[literal(f1) [record literal(2nd) [[literal(f5) ident(a)] [literal(f3) ident(b)]]]] [literal(f2) ident(c)]]] [[bind ident(a) literal(1)] [bind ident(b) literal(6)]] [nop]]]]]]}
+%{Handle [localvar ident(x)
+% [localvar ident(y)
+%  [localvar ident(z)
+%   [[bind ident(x)
+%     [record literal(label)
+%      [[literal(f1) [record literal(2nd) [[literal(f5) ident(y)] [literal(f3) ident(z)]]]]
+%      [literal(f2) ident(z)]]]]
+%    [match ident(x)
+%     [record literal(label) [[literal(f1) [record literal(2nd) [[literal(f5) ident(a)] [literal(f3) ident(b)]]]] [literal(f2) ident(c)]]] [[bind ident(a) literal(1)] [bind ident(b) literal(6)]] [nop]]]]]]}
+
+{Handle [localvar ident(foo)
+ [localvar ident(bar)
+  [localvar ident(quux)
+   [[bind ident(bar) [proceed [ident(bai)]
+          [[localvar ident(kite) [bind ident(kite) [proceed [ident(baz)] [bind ident(baz) [record literal(person) [[literal(age) ident(foo)]]]]]] [apply ident(kite) ident(bai)]]]]]
+    [apply ident(bar) ident(quux)]
+    [bind [record literal(person) [[literal(age) literal(40)]]] ident(quux)]
+    [bind literal(40) ident(foo)]]]]]}
