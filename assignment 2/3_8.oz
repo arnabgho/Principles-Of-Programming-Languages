@@ -92,7 +92,7 @@ proc {Value_Bind Ident V E}
    local Val in
       case V.1 
       of proceed then {Closure_Driver V.2.1 E V.2.2 Val} {BindValueToKeyInSAS E.Ident [V Val]} %{Unify ident(Ident) [V Val] E}
-      else {Unify ident(Ident) V E} 
+      else {Unify ident(Ident) V E}
       end
    end
    {Print}
@@ -415,14 +415,14 @@ end
 %    [bind [record literal(person) [[literal(age) literal(40)]]] ident(quux)]
 %    [bind literal(40) ident(foo)]]]]]}
 
-{Handle [localvar ident(a) [[bind ident(a) [proceed [ident(b)] [localvar ident(foo)
- [localvar ident(result)
-  [[bind ident(foo) [record literal(bar)
-		     [[literal(baz) literal(42)]
-		     [literal(quux) literal(314)]]]]
-   [match ident(foo) [record literal(bar)
-		      [[literal(baz) ident(fortytwo)]
-		      [literal(quux) ident(pitimes100)]]] [bind ident(result) ident(fortytwo)]
-    [bind ident(result) literal(314)]]
-   [bind ident(result) literal(42)]
-   [nop]]]]]] [apply ident(a) literal(30)]]]}
+%{Handle [localvar ident(a) [[bind ident(a) [proceed [ident(b)] [localvar ident(foo)
+% [localvar ident(result)
+%  [[bind ident(foo) [record literal(bar)
+%		     [[literal(baz) literal(42)]
+%		     [literal(quux) literal(314)]]]]
+%   [match ident(foo) [record literal(bar)
+%		      [[literal(baz) ident(fortytwo)]
+%		      [literal(quux) ident(pitimes100)]]] [bind ident(result) ident(fortytwo)]
+%    [bind ident(result) literal(314)]]
+%   [bind ident(result) literal(42)]
+%   [nop]]]]]] [apply ident(a) literal(30)]]]}
