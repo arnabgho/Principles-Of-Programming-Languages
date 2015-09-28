@@ -68,6 +68,7 @@ proc {Iterate X E}
 	 of ident(A) then
 	    {Dictionary.put E A {AddKeyToSAS}}
 	    {Iterate Y E}
+	 [] record|Rest then {Record X.1.2.1 E} {Iterate Y E}
 	 else {Iterate Y E}
 	 end
       end
@@ -355,5 +356,16 @@ end
 %      [bind ident(bar) literal(age)]
 %      [bind ident(baz) [record literal(person) [[literal(age) literal(25)]]]]
 %      [match ident(baz) [record ident(foo) [[ident(bar) ident(quux)]]] [bind ident(result) ident(quux)]
+%       [bind ident(result) literal(false)]]
+%      [bind ident(result) literal(25)]]]]]]}
+
+%{Handle [localvar ident(foo)
+%  [localvar ident(bar)
+%   [localvar ident(baz)
+%    [localvar ident(result)
+%     [[bind ident(foo) literal(person)]
+%      [bind ident(bar) literal(age)]
+%      [bind ident(baz) [record literal(person) [[literal(age) [record literal(anot) [[literal(age) literal(25)] [literal(person) literal(65)]]]]]]]
+%      [match ident(baz) [record ident(foo) [[ident(bar) [record literal(anot) [[ident(bar) ident(quux)] [ident(foo) ident(muux)]]]]]] [bind ident(result) ident(quux)]
 %       [bind ident(result) literal(false)]]
 %      [bind ident(result) literal(25)]]]]]]}
