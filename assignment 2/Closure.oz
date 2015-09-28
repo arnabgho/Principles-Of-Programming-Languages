@@ -70,11 +70,6 @@ proc {Closure Statements Closure_Env}
    [] conditional | ident(Ident) | S1 | S2 then local X Y in {Closure S1 X} {Closure S2 Y} {Merge X Y} Closure_Env={Dictionary.clone X} {Dictionary.put Closure_Env Ident 1}  end 
    [] match | ident(Ident) | P | S1 | S2 then local X Y in
 						 {Closure S1 X} {Closure S2 Y} {Merge X Y} Closure_Env={Dictionary.clone X} {Dictionary.put Closure_Env Ident 1}
-						 case P
-						 of record|Rest then {RecordAdd P Closure_Env}
-						 [] ident(Ident3) then {Dictionary.put Closure_Env Ident3 1}
-						 else skip
-						 end
 					      end
    [] apply|ident(Ident)|S then Closure_Env={Dictionary.new} {Dictionary.put Closure_Env Ident 1} {RecurAdd S Closure_Env}
    [] S1 | S2 then local X Y in {Closure S1 X} {Closure S2 Y} {Merge X Y} Closure_Env={Dictionary.clone X} end
