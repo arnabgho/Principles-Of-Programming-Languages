@@ -380,8 +380,28 @@ end
 %    [bind [record literal(person) [[literal(age) literal(40)]]] ident(quux)]
 %    [bind literal(40) ident(foo)]]]]]}
 
-{Handle [localvar ident(foo)
-  [localvar ident(bar)
-   [[bind ident(foo) [record literal(person) [[literal(name) ident(foo)]]]]
-    [bind ident(bar) [record literal(person) [[literal(name) ident(bar)]]]]
-    [bind ident(foo) ident(bar)]]]]}
+%{Handle [localvar ident(foo)
+%  [localvar ident(bar)
+%   [[bind ident(foo) [record literal(person) [[literal(name) ident(foo)]]]]
+%    [bind ident(bar) [record literal(person) [[literal(name) ident(bar)]]]]
+%    [bind ident(foo) ident(bar)]]]]}
+
+%{Handle [localvar ident(x)
+% [localvar ident(y)
+%  [localvar ident(z)
+%   [[bind ident(x)
+%     [record literal(label)
+%      [[literal(f1) [record literal(2nd) [[literal(f5) ident(y)] [literal(f3) ident(z)]]]]
+%      [literal(f2) ident(z)]]]]
+%    [bind ident(x)
+%     [record literal(label) [[literal(f1) [record literal(2nd) [[literal(f5) literal(2)] [literal(f3) literal(1)]]]] [literal(f2) literal(1)]]]]]]]]}
+
+{Handle [localvar ident(x)
+ [localvar ident(y)
+  [localvar ident(z)
+   [[bind ident(x)
+     [record literal(label)
+      [[literal(f1) [record literal(2nd) [[literal(f5) ident(y)] [literal(f3) ident(z)]]]]
+      [literal(f2) ident(z)]]]]
+    [match ident(x)
+     [record literal(label) [[literal(f1) [record literal(2nd) [[literal(f5) ident(a)] [literal(f3) ident(b)]]]] [literal(f2) ident(c)]]] [[bind ident(a) literal(1)] [bind ident(b) literal(6)]] [nop]]]]]]}
