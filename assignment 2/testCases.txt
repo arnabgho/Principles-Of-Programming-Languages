@@ -61,7 +61,7 @@
 
 
 %%---------- Procedure definition and application ---------	  
-%It's complete except 3rd. Closur need to be improved to deal with records and prodedure values
+%It's complete except 3rd. Closure need to be improved to deal with records and prodedure values
 
 [localvar ident(x)
  [[bind ident(x)
@@ -81,7 +81,7 @@
  [localvar ident(bar)
   [localvar ident(quux)
    [[bind ident(bar) [proceed [ident(baz)]
-		      [bind [record literal(person) [[literal(age) ident(foo)]]] ident(baz)]]]
+          [bind [record literal(person) [[literal(age) ident(foo)]]] ident(baz)]]]
     [apply ident(bar) ident(quux)]
     [bind [record literal(person) [[literal(age) literal(40)]]] ident(quux)]
     [bind literal(42) ident(foo)]]]]]

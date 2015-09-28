@@ -90,7 +90,7 @@ proc {Value_Bind Ident V E}
    SemStack:=@SemStack.2
    local Val in
       case V.1 
-      of proceed then Val = {Closure_Driver V.2.1 E V.2.2} {BindValueToKeyInSAS E.Ident [V Val]} %{Unify ident(Ident) [V Val] E}
+      of proceed then {Closure_Driver V.2.1 E V.2.2 Val} {BindValueToKeyInSAS E.Ident [V Val]} %{Unify ident(Ident) [V Val] E}
       else {Unify ident(Ident) V E} 
       end
    end
@@ -369,3 +369,12 @@ end
 %      [match ident(baz) [record ident(foo) [[ident(bar) [record literal(anot) [[ident(bar) ident(quux)] [ident(foo) ident(muux)]]]]]] [bind ident(result) ident(quux)]
 %       [bind ident(result) literal(false)]]
 %      [bind ident(result) literal(25)]]]]]]}
+
+%{Handle [localvar ident(foo)
+% [localvar ident(bar)
+%  [localvar ident(quux)
+%   [[bind ident(bar) [proceed [ident(baz)]
+%          [bind [record literal(person) [[literal(age) ident(foo)]]] ident(baz)]]]
+%    [apply ident(bar) ident(quux)]
+%    [bind [record literal(person) [[literal(age) literal(40)]]] ident(quux)]
+%    [bind literal(40) ident(foo)]]]]]}
