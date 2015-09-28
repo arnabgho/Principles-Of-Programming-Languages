@@ -1,0 +1,50 @@
+Some Important Assumptions 
+-----------------------------
+
+1. [proc [ident(x1)...ident(xn)] s] is represented as [proceed [ident(x1)...ident(xn)] s]
+
+2. Our Case statement: We are assuming P to be a record. If ident(x) isn't a record, we go for S2. If both X and P aren't record then we go for S1 and if ident(x) is a record but P isn't then we go for S2.
+
+Features
+-----------
+
+Our implementation supports :
+
+* Record unification with an unbound variable which is later bound.
+
+{Handle [localvar ident(foo)
+  [localvar ident(bar) [localvar ident(x) [
+   [[bind ident(foo) [record literal(person) [[literal(name) ident(x)]]]]
+    [bind ident(bar) [record literal(person) [[literal(name) literal(10)]]]]
+    [bind ident(foo) ident(bar)]]]]]] }
+
+* Pattern Matching of a record within a record (nested record)  is also supported by our implementation
+
+{Handle [localvar ident(x)
+ [localvar ident(y)
+  [localvar ident(z)
+   [[bind ident(x)
+     [record literal(label)
+      [[literal(f1) [record literal(2nd) [[literal(f5) ident(y)] [literal(f3) ident(z)]]]]
+      [literal(f2) ident(z)]]]]
+    [match ident(x)
+     [record literal(label) [[literal(f1) [record literal(2nd) [[literal(f5) ident(a)] [literal(f3) ident(b)]]]] [literal(f2) ident(c)]]] [[bind ident(a) literal(1)] [bind ident(b) literal(6)]] [nop]]]]]]}
+
+* Our implementation supports self referential records that have a field that refers to itself
+ 
+{Handle [localvar ident(foo)
+  [localvar ident(bar)
+   [[bind ident(foo) [record literal(person) [[literal(name) ident(foo)]]]]
+    [bind ident(bar) [record literal(person) [[literal(name) ident(bar)]]]]
+    [bind ident(foo) ident(bar)]]]]}
+
+* Our implementation supports a record inside a procedure which gets bound to a value in the global scope 
+
+{Handle [localvar ident(foo)
+ [localvar ident(bar)
+  [localvar ident(quux)
+   [[bind ident(bar) [proceed [ident(baz)]
+          [bind [record literal(person) [[literal(age) ident(foo)]]] ident(baz)]]]
+    [apply ident(bar) ident(quux)]
+    [bind [record literal(person) [[literal(age) literal(40)]]] ident(quux)]
+    [bind literal(40) ident(foo)]]]]]}
