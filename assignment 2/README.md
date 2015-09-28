@@ -94,3 +94,14 @@ Our implementation supports :
       [literal(f2) ident(z)]]]]
     [bind ident(x)
      [record literal(label) [[literal(f1) literal(2)] [literal(f2) literal(1)]]]]]]]]}
+
+* Procedure Within a procedure is available in  our representation 
+
+{Handle [localvar ident(foo)
+ [localvar ident(bar)
+  [localvar ident(quux)
+   [[bind ident(bar) [proceed [ident(bai)]
+          [[localvar ident(kite) [bind ident(kite) [proceed [ident(baz)] [bind ident(baz) [record literal(person) [[literal(age) ident(foo)]]]]]] [apply ident(kite) ident(bai)]]]]]
+    [apply ident(bar) ident(quux)]
+    [bind [record literal(person) [[literal(age) literal(40)]]] ident(quux)]
+    [bind literal(40) ident(foo)]]]]]}
