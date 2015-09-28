@@ -155,3 +155,16 @@
       [match ident(baz) [record ident(foo) [[ident(bar) ident(quux)]]] [bind ident(result) ident(quux)]
        [bind ident(result) literal(false)]]
       [bind ident(result) literal(25)]]]]]]
+
+[localvar ident(a) [[bind ident(a) [proceed [ident(b)] [localvar ident(foo)
+ [localvar ident(result)
+  [[bind ident(foo) [record literal(bar)
+         [[literal(baz) literal(42)]
+         [literal(quux) literal(314)]]]]
+   [match ident(foo) [record literal(bar)
+          [[literal(baz) ident(fortytwo)]
+          [literal(quux) ident(pitimes100)]]] [bind ident(result) ident(fortytwo)]
+    [bind ident(result) literal(314)]]
+   [bind ident(result) literal(42)]
+   [nop]]]]]] [apply ident(a) literal(30)]]]
+%Match within Procedure
