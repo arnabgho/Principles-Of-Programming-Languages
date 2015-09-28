@@ -31,6 +31,16 @@
     [bind ident(bar) [record literal(person) [[literal(name) ident(bar)]]]]
     [bind ident(foo) ident(bar)]]]]
 
+[localvar ident(x)
+ [localvar ident(y)
+  [localvar ident(z)
+   [[bind ident(x)
+     [record literal(label)
+      [[literal(f1) [record literal(2nd) [[literal(f5) ident(y)] [literal(f3) ident(z)]]]]
+      [literal(f2) ident(z)]]]]
+    [match ident(x)
+     [record literal(label) [[literal(f1) [record literal(2nd) [[literal(f5) ident(a)] [literal(f3) ident(b)]]]] [literal(f2) ident(c)]]] [[bind ident(a) literal(1)] [bind ident(b) literal(6)]] [nop]]]]]]
+%Record within record
 
 %%---------------- Conditional ---------------
 %It's complete
@@ -87,7 +97,17 @@
     [bind literal(42) ident(foo)]]]]]
 
 % We'll check whether foo has been assigned the value by raising an exception here
+   
+[localvar ident(foo)
+ [localvar ident(bar)
+  [localvar ident(quux)
+   [[bind ident(bar) [proceed [ident(bai)]
+          [[localvar ident(kite) [bind ident(kite) [proceed [ident(baz)] [bind ident(baz) [record literal(person) [[literal(age) ident(foo)]]]]]] [apply ident(kite) ident(bai)]]]]]
+    [apply ident(bar) ident(quux)]
+    [bind [record literal(person) [[literal(age) literal(40)]]] ident(quux)]
+    [bind literal(40) ident(foo)]]]]]
 
+%Proc within Proc
 
 %%------------ Pattern Match -------------------
 %It's complete
