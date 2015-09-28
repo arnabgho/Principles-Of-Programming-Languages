@@ -8,6 +8,8 @@ Some Important Assumptions
 Features
 -----------
 
+** Note : All our working examples are commented at the bottom of 3_8.oz . 
+
 Our implementation supports :
 
 * All the essential features as mentioned in the assignment has been implemented 
@@ -62,13 +64,33 @@ Our implementation supports :
 
 * Conditional Statement is supported with the binding of identifiers later in the scope
 
-%{Handle [localvar ident(x)
-% [[localvar ident(y)
-%   [[localvar ident(x)
-%     [[bind ident(x) ident(y)]
-%      [bind ident(y) literal(true) ]
-%      [conditional ident(y) [nop]
-%       [bind ident(x) literal(true)]]]]
-%    [bind ident(x) literal(35)]]]]]
-%}
+{Handle [localvar ident(x)
+ [[localvar ident(y)
+   [[localvar ident(x)
+     [[bind ident(x) ident(y)]
+      [bind ident(y) literal(true) ]
+      [conditional ident(y) [nop]
+       [bind ident(x) literal(true)]]]]
+    [bind ident(x) literal(35)]]]]]
+}
 
+* Procedure can be applied by passing record as a parameter
+
+[localvar ident(x)
+ [[bind ident(x)
+   [proceed [ident(y) ident(x)] [nop]]]
+  [apply ident(x)
+   literal(1)
+   [record literal(label) [literal(f1) literal(1)]]]]]
+
+* Records with the same value can be assigned twice without an error
+
+{Handle [localvar ident(x)
+ [localvar ident(y)
+  [localvar ident(z)
+   [[bind ident(x)
+     [record literal(label)
+      [[literal(f1) ident(y)]
+      [literal(f2) ident(z)]]]]
+    [bind ident(x)
+     [record literal(label) [[literal(f1) literal(2)] [literal(f2) literal(1)]]]]]]]]}
