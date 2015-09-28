@@ -14,6 +14,7 @@ proc {Print}
       %{Browse @SemStack}
       {Browse @SemStack.1.statements}
       {Browse {Dictionary.entries @SemStack.1.environment}}
+      {Browse {Dictionary.entries KeyValueStore}}
    end
 end
 
@@ -378,3 +379,9 @@ end
 %    [apply ident(bar) ident(quux)]
 %    [bind [record literal(person) [[literal(age) literal(40)]]] ident(quux)]
 %    [bind literal(40) ident(foo)]]]]]}
+
+{Handle [localvar ident(foo)
+  [localvar ident(bar)
+   [[bind ident(foo) [record literal(person) [[literal(name) ident(foo)]]]]
+    [bind ident(bar) [record literal(person) [[literal(name) ident(bar)]]]]
+    [bind ident(foo) ident(bar)]]]]}
