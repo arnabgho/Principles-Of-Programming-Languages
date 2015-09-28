@@ -1,4 +1,4 @@
-declare IterRecordAdd RecurAdd RecordAdd ProcAdd MergeHelper Merge Closure Closure_Driver Closure_Driver_Helper Closure_Creator in
+declare RemoveDummy IterRecordAdd RecurAdd RecordAdd ProcAdd MergeHelper Merge Closure Closure_Driver Closure_Driver_Helper Closure_Creator in
 proc{MergeHelper Dict1 Xs}   
    case Xs			    
    of nil then skip	    
@@ -50,6 +50,13 @@ proc {RecurAdd S Closure_Env}
    end
 end
 
+proc {RemoveDummy Closure_Env Dummy}
+   case Dummy
+   of nil then skip
+   [] H|T then {Dictionary.remove Closure_Env H} {RemoveDummy Closure_Env T}
+   end
+end
+
 proc {Closure Statements Closure_Env}
    case Statements
    of nil then Closure_Env={Dictionary.new}
@@ -71,6 +78,15 @@ proc {Closure Statements Closure_Env}
    [] conditional | ident(Ident) | S1 | S2 then local X Y in {Closure S1 X} {Closure S2 Y} {Merge X Y} Closure_Env={Dictionary.clone X} {Dictionary.put Closure_Env Ident 1}  end 
    [] match | ident(Ident) | P | S1 | S2 then local X Y in
 						 {Closure S1 X} {Closure S2 Y} {Merge X Y} Closure_Env={Dictionary.clone X} {Dictionary.put Closure_Env Ident 1}
+						 local Dummy in
+						    Dummy={Dictionary.new}
+						    case P
+						    of record|Rest then {RecordAdd P Dummy}
+						    [] ident(Ident3) then {Dictionary.put Dummy Ident3 1}
+						    else skip
+						    end
+						    {RemoveDummy Closure_Env {Dictionary.keys Dummy}}
+						 end
 					      end
    [] apply|ident(Ident)|S then Closure_Env={Dictionary.new} {Dictionary.put Closure_Env Ident 1} {RecurAdd S Closure_Env}
    [] S1 | S2 then local X Y in {Closure S1 X} {Closure S2 Y} {Merge X Y} Closure_Env={Dictionary.clone X} end

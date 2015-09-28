@@ -406,11 +406,23 @@ end
 %    [match ident(x)
 %     [record literal(label) [[literal(f1) [record literal(2nd) [[literal(f5) ident(a)] [literal(f3) ident(b)]]]] [literal(f2) ident(c)]]] [[bind ident(a) literal(1)] [bind ident(b) literal(6)]] [nop]]]]]]}
 
-{Handle [localvar ident(foo)
- [localvar ident(bar)
-  [localvar ident(quux)
-   [[bind ident(bar) [proceed [ident(bai)]
-          [[localvar ident(kite) [bind ident(kite) [proceed [ident(baz)] [bind ident(baz) [record literal(person) [[literal(age) ident(foo)]]]]]] [apply ident(kite) ident(bai)]]]]]
-    [apply ident(bar) ident(quux)]
-    [bind [record literal(person) [[literal(age) literal(40)]]] ident(quux)]
-    [bind literal(40) ident(foo)]]]]]}
+%{Handle [localvar ident(foo)
+% [localvar ident(bar)
+%  [localvar ident(quux)
+%   [[bind ident(bar) [proceed [ident(bai)]
+%          [[localvar ident(kite) [bind ident(kite) [proceed [ident(baz)] [bind ident(baz) [record literal(person) [[literal(age) ident(foo)]]]]]] [apply ident(kite) ident(bai)]]]]]
+%    [apply ident(bar) ident(quux)]
+%    [bind [record literal(person) [[literal(age) literal(40)]]] ident(quux)]
+%    [bind literal(40) ident(foo)]]]]]}
+
+{Handle [localvar ident(a) [[bind ident(a) [proceed [ident(b)] [localvar ident(foo)
+ [localvar ident(result)
+  [[bind ident(foo) [record literal(bar)
+		     [[literal(baz) literal(42)]
+		     [literal(quux) literal(314)]]]]
+   [match ident(foo) [record literal(bar)
+		      [[literal(baz) ident(fortytwo)]
+		      [literal(quux) ident(pitimes100)]]] [bind ident(result) ident(fortytwo)]
+    [bind ident(result) literal(314)]]
+   [bind ident(result) literal(42)]
+   [nop]]]]]] [apply ident(a) literal(30)]]]}
