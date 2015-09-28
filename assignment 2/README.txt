@@ -3,7 +3,7 @@ Some Important Assumptions
 
 1. [proc [ident(x1)...ident(xn)] s] is represented as [proceed [ident(x1)...ident(xn)] s]
 
-2. Our Case statement: If ident(x) isn't a record but P is, we go for S2. If both ident(X) and P aren't record but match then we go for S1 and if ident(x) is a record but P isn't then we go for S2.
+2. Our Case statement: We are assuming P to be a record. If ident(x) isn't a record, we go for S2. If both X and P aren't record then we go for S1 and if ident(x) is a record but P isn't then we go for S2.
 
 Features
 -----------
@@ -29,7 +29,7 @@ Our implementation supports :
   [localvar ident(bar) [localvar ident(x) [
    [[bind ident(foo) [record literal(person) [[literal(name) ident(x)]]]]
     [bind ident(bar) [record literal(person) [[literal(name) literal(10)]]]]
-    [bind ident(foo) ident(bar)]]]]]]}
+    [bind ident(foo) ident(bar)]]]]]] }
 
 * Pattern Matching of a record within a record (nested record)  is also supported by our implementation
 
@@ -94,20 +94,6 @@ Our implementation supports :
       [literal(f2) ident(z)]]]]
     [bind ident(x)
      [record literal(label) [[literal(f1) literal(2)] [literal(f2) literal(1)]]]]]]]]}
-
-* Case can be used in procedure
-
-{Handle [localvar ident(a) [[bind ident(a) [proceed [ident(b)] [localvar ident(foo)
- [localvar ident(result)
-  [[bind ident(foo) [record literal(bar)
-         [[literal(baz) literal(42)]
-         [literal(quux) literal(314)]]]]
-   [match ident(foo) [record literal(bar)
-          [[literal(baz) ident(fortytwo)]
-          [literal(quux) ident(pitimes100)]]] [bind ident(result) ident(fortytwo)]
-    [bind ident(result) literal(314)]]
-   [bind ident(result) literal(42)]
-   [nop]]]]]] [apply ident(a) literal(30)]]]}
 
 * Procedure Within a procedure is available in  our representation 
 
