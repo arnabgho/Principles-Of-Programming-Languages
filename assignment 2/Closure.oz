@@ -1,4 +1,4 @@
-declare MergeHelper Merge Closure Closure_Driver Closure_Driver_Helper Closure_Creator in
+declare RecurAdd RecordAdd ProcAdd MergeHelper Merge Closure Closure_Driver Closure_Driver_Helper Closure_Creator in
 proc{MergeHelper Dict1 Xs Merged}   
    case Xs			    
    of nil then Merged=Dict1	    
@@ -14,15 +14,45 @@ fun{Merge Dict1 Dict2}
    end
 end
 
+proc {RecurAdd S Closure_Env}
+   case S
+   of H|T then {RecurAdd H Closure_Env} {RecurAdd T Closure_Env}
+   [] nil then skip
+   [] ident(H) then {Dictionary.put Closure_Env H 1}
+   [] record|Rest then {RecordAdd S Closure_Env}
+   [] proceed|Rest then {ProcAdd S Closure_Env}
+   else skip
+   end
+end
+
 proc {Closure Statements Closure_Env}
    case Statements
    of nil then Closure_Env={Dictionary.new}
    [] nop|nil then Closure_Env={Dictionary.new}
-   [] localvar | ident(Ident) | S_bar then local X in  {Closure S_bar X}  {Dictionary.remove X Ident} Closure_Env=X  end 
+   [] localvar | ident(Ident) | S_bar then local X in  {Closure S_bar X}  {Dictionary.remove X Ident} Closure_Env={Dictionary.clone X}  end 
    [] bind | ident(IdentL) | ident(IdentR) | nil then Closure_Env={Dictionary.new} {Dictionary.put Closure_Env IdentL 1} {Dictionary.put Closure_Env IdentR 1} 
-   [] bind | ident(Ident) | V then Closure_Env={Dictionary.new} {Dictionary.put Closure_Env Ident 1} 
-   [] conditional | ident(Ident) | S1 | S2 then local X Y in {Closure S1 X} {Closure S2 Y} Closure_Env={Merge X Y}  end 
-   [] match | ident(Ident) | P | S1 | S2 then local X Y in {Closure S1 X} {Closure S2 Y} Closure_Env={Merge X Y} {Dictionary.put Closure_Env Ident 1}  end
+   [] bind | ident(Ident) | V then Closure_Env={Dictionary.new} {Dictionary.put Closure_Env Ident 1}
+      case V.1
+      of record|Rest then {RecordAdd V.1 Closure_Env}
+      [] proceed|Rest then {ProcAdd V.1 Closure_Env}
+      else skip
+      end
+   [] bind | V | ident(Ident) | nil then Closure_Env={Dictionary.new} {Dictionary.put Closure_Env Ident 1}
+      case V
+      of record|Rest then {RecordAdd V Closure_Env}
+      [] proceed|Rest then {ProcAdd V Closure_Env}
+      else skip
+      end
+   [] conditional | ident(Ident) | S1 | S2 then local X Y in {Closure S1 X} {Closure S2 Y} Closure_Env={Merge X Y} {Dictionary.put Closure_Env Ident 1}  end 
+   [] match | ident(Ident) | P | S1 | S2 then local X Y in
+						 {Closure S1 X} {Closure S2 Y} Closure_Env={Merge X Y} {Dictionary.put Closure_Env Ident 1}
+						 case P
+						 of record|Rest then {RecordAdd P Closure_Env}
+						 [] ident(Ident3) then {Dictionary.put Closure_Env Ident3 1}
+						 else skip
+						 end
+					      end
+   [] apply|ident(Ident)|S then Closure_Env={Dictionary.new} {Dictionary.put Closure_Env Ident 1} {RecurAdd S Closure_Env}
    [] S1 | S2 then local X Y in {Closure S1 X} {Closure S2 Y} Closure_Env={Merge X Y}  end
    else Closure_Env={Dictionary.new}  
    end	   			    
