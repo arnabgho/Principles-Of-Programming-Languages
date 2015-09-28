@@ -7,7 +7,7 @@
 
 
 %%-------------- Record bind ----------------
-%It's complete. 2nd and 3rd seems to be going to infinite loop
+%It's complete.
 
 [localvar ident(x)
  [localvar ident(y)
