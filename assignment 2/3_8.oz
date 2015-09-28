@@ -381,7 +381,7 @@ end
 %    [bind literal(40) ident(foo)]]]]]}
 
 {Handle [localvar ident(foo)
-  [localvar ident(bar)
-   [[bind ident(foo) [record literal(person) [[literal(name) ident(foo)]]]]
-    [bind ident(bar) [record literal(person) [[literal(name) ident(bar)]]]]
-    [bind ident(foo) ident(bar)]]]]}
+  [localvar ident(bar) [localvar ident(x) [
+   [[bind ident(foo) [record literal(person) [[literal(name) ident(x)]]]]
+    [bind ident(bar) [record literal(person) [[literal(name) literal(10)]]]]
+    [bind ident(foo) ident(bar)]]]]]] }

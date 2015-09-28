@@ -1,0 +1,23 @@
+Some Important Assumptions 
+-----------------------------
+
+1. [proc [ident(x1)...ident(xn)] s] is represented as [proceed [ident(x1)...ident(xn)] s]
+
+2. Our Case statement: We are assuming P to be a record. If ident(x) isn't a record, we go for S2. If both X and P aren't record then we go for S1 and if ident(x) is a record but P isn't then we go for S2.
+
+Features
+-----------
+
+Our implementation supports :
+
+* Record unification with an unbound variable which is later bound.
+
+for example 
+
+{Handle [localvar ident(foo)
+  [localvar ident(bar) [localvar ident(x) [
+   [[bind ident(foo) [record literal(person) [[literal(name) ident(x)]]]]
+    [bind ident(bar) [record literal(person) [[literal(name) literal(10)]]]]
+    [bind ident(foo) ident(bar)]]]]]] }
+
+ 
