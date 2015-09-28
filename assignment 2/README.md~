@@ -10,10 +10,6 @@ Features
 
 Our implementation supports :
 
-* All the essential features as mentioned in the assignment has been implemented 
-  * nop
-  * localvar 
-
 * Record unification with an unbound variable which is later bound.
 
 {Handle [localvar ident(foo)
@@ -52,16 +48,3 @@ Our implementation supports :
     [apply ident(bar) ident(quux)]
     [bind [record literal(person) [[literal(age) literal(40)]]] ident(quux)]
     [bind literal(40) ident(foo)]]]]]}
-
-* Conditional Statement is supported with the binding of identifiers later in the scope
-
-%{Handle [localvar ident(x)
-% [[localvar ident(y)
-%   [[localvar ident(x)
-%     [[bind ident(x) ident(y)]
-%      [bind ident(y) literal(true) ]
-%      [conditional ident(y) [nop]
-%       [bind ident(x) literal(true)]]]]
-%    [bind ident(x) literal(35)]]]]]
-%}
-
