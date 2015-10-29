@@ -1,8 +1,9 @@
 \insert 'Unify.oz'
 \insert 'Closure.oz'
 
-declare IterateAdd Proc_Call Case Set Conditional  Iterate Record Print Dummy Pop SemStack Driver No_Op Composition Handle Variable_Dec Variable_Bind  Value_Bind in
+declare MultiSemStack New_Thread IterateAdd Proc_Call Case Set Conditional Iterate Record Print Dummy Pop SemStack Driver No_Op Composition Handle Variable_Dec Variable_Bind  Value_Bind in
 SemStack = {NewCell [tuple(statements:[[nop] [nop] [nop]] environment:{Dictionary.new})]}
+MultiSemStack = {NewCell [tuple(statements:[[nop] [nop] [nop]] environment:{Dictionary.new})]}
 Dummy = {NewCell 0}
 
 proc {Print}
@@ -168,9 +169,20 @@ proc {Proc_Call Proc Args E}
    end
 end
 
+proc {New_Thread S E}
+   SemStack:=@SemStack.2
+   MultiSemStack:=[tuple(statements:S environment:E)] | @MultiSemStack
+end
+
 proc {Driver}
    local X S E in
-      if @SemStack==nil then skip
+      if @SemStack==nil then
+	 if @MultiSemStack==nil then skip
+	 else
+	    SemStack:=@MultiSemStack.1
+	    MultiSemStack:=@MultiSemStack.2
+	    {Driver}
+	 end
       else
 	 X=@SemStack.1
 	 S=X.statements
@@ -184,7 +196,8 @@ proc {Driver}
 	 [] bind|V|ident(Ident)|nil then {Value_Bind Ident V E} {Driver}
 	 [] conditional|ident(Ident) | S1 | S2 then {Conditional Ident S1 S2.1 E} {Driver}
 	 [] match|ident(Ident)|P|S1|S2 then {Case Ident P S1 S2 E} {Driver}
-	 [] apply|ident(Ident)|S then {Proc_Call Ident S E} {Driver}
+	 [] apply|ident(Ident)|S1 then {Proc_Call Ident S1 E} {Driver}
+	 [] dhaaga|S1|ant|nil then {New_Thread S1 E} {Driver}
 	 [] S1|S2 then  {Composition S1 S2 E} {Driver}
 	 end
       end
@@ -192,400 +205,12 @@ proc {Driver}
 end
 
 proc {Handle Statements}
+   MultiSemStack:=[[tuple(statements:Statements environment:{Dictionary.new})]]
+   SemStack:=@MultiSemStack.1
+   MultiSemStack:=@MultiSemStack.2
    SemStack:=[tuple(statements:Statements environment:{Dictionary.new})]
    {Print}
    {Driver}
 end
 
-%{Handle [[nop] [nop] [nop]]}
-%{Handle [bind ident(x) ident(y)]}
-%{Handle [localvar ident(x) [localvar ident(y) [localvar ident(x) [nop]]]]}
-%{Handle [localvar ident(x) [localvar ident(y) [bind ident(x) ident(y)]]]}
-%{Handle [localvar ident(x) [localvar ident(y) [[bind ident(x) literal(100)] [bind ident(y) [record literal(a) [[literal(1) ident(x1)] [literal(2) ident(x2)]]]]]]]}
-%{Handle [localvar ident(x) [localvar ident(y) [[bind ident(x) literal(100)] [bind ident(y) literal(200)]]]]}
-%{Handle [localvar ident(x) [bind ident(x) literal(100)]]}
-%{Handle [localvar ident(x) [localvar ident(y) [[bind ident(x) literal(100)] [bind ident(y) [record literal(a) [[literal(1) ident(x1)] [literal(2) ident(x2)]]]]]]]}
-%{Handle [localvar ident(x) [localvar ident(y) [[bind ident(x) literal(100)] [bind ident(y) [record literal(a) [[literal(1) ident(x1)] [literal(2) ident(x2)]]]]]]]}
-%{Handle [localvar ident(x) [localvar ident(y) [[bind ident(x) literal(true)] [conditional ident(x) [bind ident(y) literal(10)] [bind ident(y) literal(20)]]]]]}
-%{Handle [localvar ident(x) [localvar ident(y) [[bind ident(y) [record literal(a) [[literal(1) ident(x1)] [literal(2) ident(x2)]]]] [match ident(y) [record literal(a) [[literal(1) ident(x3)] [literal(2) ident(x4)]]] [bind ident(x) literal(10)] [bind ident(x) literal(20)]]]]]}
-%{Handle [localvar ident(x) [localvar ident(y) [[bind ident(x) literal(10)] [bind ident(x) ident(y)]]]]}
-%{Handle [localvar ident(x) [bind ident(x) [proceed [y] [[nop]]]]]}
-%{Handle [localvar ident(x) [bind ident(x) [proceed [ident(y)] [bind ident(y) ident(x)]]]]}
-%{Handle [localvar ident(z) [
-%			    [localvar ident(x) [
-%						[localvar ident(t)
-%						 [bind ident(t) literal(10)]
-%						 [
-%					          [bind ident(x) [proceed [ident(y)] [bind ident(y) ident(t)]]]
-%						 ]
-%						]
-%						[apply ident(x) ident(z)]
-%					       ]
-%			    ]
-%			   ]
-%	]
-%}
-
-%{Handle [localvar ident(x)
-% [[localvar ident(y)
-%   [[localvar ident(x)
-%     [[bind ident(x) ident(y)]
-%      [bind ident(y) literal(true) ]
-%      [conditional ident(y) [nop]
-%       [bind ident(x) literal(true)]]]]
-%    [bind ident(x) literal(35)]]]]]
-%}
-
-%{Handle [localvar ident(x)
-%	 [bind ident(x) literal(10)]
-%	 [bind ident(x) literal(10)]
-%	]
-% }
-
-%{Handle [localvar ident(foo)
-%  [localvar ident(result)
-%   [[bind ident(foo) literal(true)]
-%    [conditional ident(foo) [ bind ident(result) literal(true)]
-%     [bind ident(result) literal(false)]]
-%    [bind ident(result) literal(false)]]]]
-%}
-
-%{Handle [localvar ident(foo)
-%  [localvar ident(result)
-%   [[bind ident(foo) literal(false)]
-%    [conditional ident(foo) [bind ident(result) literal(true)]
-%     [bind ident(result) literal(false)]]
-%    [bind ident(result) literal(false)]]]]
-%}
-
-%{Handle [localvar ident(x)
-%	 [localvar ident(p)[localvar ident(q) [ bind ident(p) literal(1)] [bind ident(q) literal(2)]
-% [[bind ident(x)
-%   [proceed [ident(y) ident(x)] [nop]]]]
-%	 [apply ident(x) ident(p) ident(q)]]]]
-%}
-
-%[localvar ident(x)
-% [[bind ident(x)
-%   [proceed [ident(y) ident(x)] [nop]]]
-%  [apply ident(x)
-%   literal(1)
-%   [record literal(label) [literal(f1) literal(1)]]]]]
-
-%{Handle [localvar ident(x)
-% [localvar ident(y)
-%  [localvar ident(z)
-%   [[bind ident(x)
-%     [record literal(label)
-%      [[literal(f1) ident(y)]
-%      [literal(f2) ident(z)]]]]
-%    [bind ident(x)
-%     [record literal(label) [[literal(f1) literal(2)] [literal(f2) literal(1)]]]]]]]]}
-
-%{Handle [localvar ident(foo)
-%  [localvar ident(bar)
-%   [[bind ident(foo) [record literal(person) [[literal(name) ident(bar)]]]]
-%    [bind ident(bar) [record literal(person) [[literal(name) ident(foo)]]]]
-%    [bind ident(foo) ident(bar)]]]]}  %Infinite loop??
-
-%{Handle [localvar ident(foo)
-%  [localvar ident(bar)
-%   [[bind ident(foo) [record literal(person) [[literal(name) ident(foo)]]]]
-%    [bind ident(bar) [record literal(person) [[literal(name) ident(bar)]]]]
-%    [bind ident(foo) ident(bar)]]]]}
-
-%{Handle [localvar ident(x)
-% [[bind ident(x)
-%   [proceed [ident(y) ident(x)] [nop]]]
-%  [apply ident(x) literal(1) literal(2)]
-% ]
-%]}
-
-%{Handle [localvar ident(x)
-% [[bind ident(x)
-%   [proceed [ident(y) ident(x)] [nop]]]
-%  [apply ident(x)
-%   literal(1) [record literal(label) [[literal(f1) literal(p)]]]
-%   ]]]}
-
-%{Handle [localvar ident(foo)
-% [localvar ident(bar)
-%  [localvar ident(quux)
-%   [[bind ident(bar) [proceed [ident(baz)]
-%		      [bind [record literal(person) [[literal(age) ident(foo)]]] ident(baz)]]]
-%    [apply ident(bar) ident(quux)]
-%    [bind [record literal(person) [[literal(age) literal(40)]]] ident(quux)]
-%    [bind literal(42) ident(foo)]]]]]} % Closure should also handle records and procedures
-
-%{Handle [localvar ident(x)
-% [[bind ident(x)
-%   [record literal(label)
-%    [[literal(f1) literal(1)]
-%    [literal(f2) literal(2)]]]]
-%  [match ident(x)
-%   [record literal(label)
-%    [[literal(f1) literal(1)]
-%    [literal(f2) literal(2)]]] [[nop]] [nop]]]]}
-
-%{Handle [localvar ident(foo)
-% [localvar ident(result)
-%  [[bind ident(foo) [record literal(bar)
-%		     [[literal(baz) literal(42)]
-%		     [literal(quux) literal(314)]]]]
-%   [match ident(foo) [record literal(bar)
-%		      [[literal(baz) ident(fortytwo)]
-%		      [literal(quux) ident(pitimes100)]]] [bind ident(result) ident(fortytwo)]
-%    [bind ident(result) literal(314)]]
-%   [bind ident(result) literal(42)]
-%   [nop]]]]}
-
-%{Handle [localvar ident(foo)
-%  [localvar ident(bar)
-%   [localvar ident(baz)
-%    [[bind ident(foo) ident(bar)]
-%     [bind literal(20) ident(bar)]
-%     [match ident(foo) literal(21) [bind ident(baz) literal(true)]
-%      [bind ident(baz) literal(false)]]
-%     [bind ident(baz) literal(false)]
-%     [nop]]]]]}
-
-%{Handle [localvar ident(foo)
-%  [localvar ident(bar)
-%   [localvar ident(baz)
-%    [localvar ident(result)
-%     [[bind ident(foo) literal(person)]
-%      [bind ident(bar) literal(age)]
-%      [bind ident(baz) [record literal(person) [[literal(age) literal(25)]]]]
-%      [match ident(baz) [record ident(foo) [[ident(bar) ident(quux)]]] [bind ident(result) ident(quux)]
-%       [bind ident(result) literal(false)]]
-%      [bind ident(result) literal(25)]]]]]]}
-
-%{Handle [localvar ident(foo)
-%  [localvar ident(bar)
-%   [localvar ident(baz)
-%    [localvar ident(result)
-%     [[bind ident(foo) literal(person)]
-%      [bind ident(bar) literal(age)]
-%      [bind ident(baz) [record literal(person) [[literal(age) [record literal(anot) [[literal(age) literal(25)] [literal(person) literal(65)]]]]]]]
-%      [match ident(baz) [record ident(foo) [[ident(bar) [record literal(anot) [[ident(bar) ident(quux)] [ident(foo) ident(muux)]]]]]] [bind ident(result) ident(quux)]
-%       [bind ident(result) literal(false)]]
-%      [bind ident(result) literal(25)]]]]]]}
-
-%{Handle [localvar ident(foo)
-% [localvar ident(bar)
-%  [localvar ident(quux)
-%   [[bind ident(bar) [proceed [ident(baz)]
-%          [bind [record literal(person) [[literal(age) ident(foo)]]] ident(baz)]]]
-%    [apply ident(bar) ident(quux)]
-%    [bind [record literal(person) [[literal(age) literal(40)]]] ident(quux)]
-%    [bind literal(40) ident(foo)]]]]]}
-
-%{Handle [localvar ident(foo)
-%  [localvar ident(bar)
-%   [[bind ident(foo) [record literal(person) [[literal(name) ident(foo)]]]]
-%    [bind ident(bar) [record literal(person) [[literal(name) ident(bar)]]]]
-%    [bind ident(foo) ident(bar)]]]]}
-
-%{Handle [localvar ident(x)
-% [localvar ident(y)
-%  [localvar ident(z)
-%   [[bind ident(x)
-%     [record literal(label)
-%      [[literal(f1) [record literal(2nd) [[literal(f5) ident(y)] [literal(f3) ident(z)]]]]
-%      [literal(f2) ident(z)]]]]
-%    [bind ident(x)
-%     [record literal(label) [[literal(f1) [record literal(2nd) [[literal(f5) literal(2)] [literal(f3) literal(1)]]]] [literal(f2) literal(1)]]]]]]]]}
-
-%{Handle [localvar ident(x)
-% [localvar ident(y)
-%  [localvar ident(z)
-%   [[bind ident(x)
-%     [record literal(label)
-%      [[literal(f1) [record literal(2nd) [[literal(f5) ident(y)] [literal(f3) ident(z)]]]]
-%      [literal(f2) ident(z)]]]]
-%    [match ident(x)
-%     [record literal(label) [[literal(f1) [record literal(2nd) [[literal(f5) ident(a)] [literal(f3) ident(b)]]]] [literal(f2) ident(c)]]] [[bind ident(a) literal(1)] [bind ident(b) literal(6)]] [nop]]]]]]}
-
-%{Handle [localvar ident(foo)
-% [localvar ident(bar)
-%  [localvar ident(quux)
-%   [[bind ident(bar) [proceed [ident(bai)]
-%          [[localvar ident(kite) [bind ident(kite) [proceed [ident(baz)] [bind ident(baz) [record literal(person) [[literal(age) ident(foo)]]]]]] [apply ident(kite) ident(bai)]]]]]
-%    [apply ident(bar) ident(quux)]
-%    [bind [record literal(person) [[literal(age) literal(40)]]] ident(quux)]
-%    [bind literal(40) ident(foo)]]]]]}
-
-%{Handle [localvar ident(a) [[bind ident(a) [proceed [ident(b)] [localvar ident(foo)
-% [localvar ident(result)
-%  [[bind ident(foo) [record literal(bar)
-%		     [[literal(baz) literal(42)]
-%		     [literal(quux) literal(314)]]]]
-%   [match ident(foo) [record literal(bar)
-%		      [[literal(baz) ident(fortytwo)]
-%		      [literal(quux) ident(pitimes100)]]] [bind ident(result) ident(fortytwo)]
-%    [bind ident(result) literal(314)]]
-%   [bind ident(result) literal(42)]
-%   [nop]]]]]] [apply ident(a) literal(30)]]]}
-
-%%-------------- Record bind ----------------
-%It's complete.
-
-{Handle [localvar ident(x)
- [localvar ident(y)
-  [localvar ident(z)
-   [[bind ident(x)
-     [record literal(label)
-      [[literal(f1) ident(y)]
-      [literal(f2) ident(z)]]]]
-    [bind ident(x)
-     [record literal(label) [[literal(f1) literal(2)] [literal(f2) literal(1)]]]]]]]]}
-
-{Handle [localvar ident(foo)
-  [localvar ident(bar)
-   [[bind ident(foo) [record literal(person) [[literal(name) ident(bar)]]]]
-    [bind ident(bar) [record literal(person) [[literal(name) ident(foo)]]]]
-    [bind ident(foo) ident(bar)]]]]}
-
-{Handle [localvar ident(foo)
-  [localvar ident(bar)
-   [[bind ident(foo) [record literal(person) [[literal(name) ident(foo)]]]]
-    [bind ident(bar) [record literal(person) [[literal(name) ident(bar)]]]]
-    [bind ident(foo) ident(bar)]]]]}
-
-{Handle [localvar ident(x)
- [localvar ident(y)
-  [localvar ident(z)
-   [[bind ident(x)
-     [record literal(label)
-      [[literal(f1) [record literal(2nd) [[literal(f5) ident(y)] [literal(f3) ident(z)]]]]
-      [literal(f2) ident(z)]]]]
-    [match ident(x)
-     [record literal(label) [[literal(f1) [record literal(2nd) [[literal(f5) ident(a)] [literal(f3) ident(b)]]]] [literal(f2) ident(c)]]] [[bind ident(a) literal(1)] [bind ident(b) literal(6)]] [nop]]]]]]}
-%Record within record
-
-%%---------------- Conditional ---------------
-%It's complete
-
-{Handle [localvar ident(x)
- [[localvar ident(y)
-   [[localvar ident(x)
-     [[bind ident(x) ident(y)]
-      [bind ident(y) literal(true)]
-      [conditional ident(y) [nop]
-       [bind ident(x) literal(true)]]]]
-    [bind ident(x) literal(35)]]]]]}
-
-{Handle [localvar ident(foo)
-  [localvar ident(result)
-   [[bind ident(foo) literal(true)]
-    [conditional ident(foo) [bind ident(result) literal(true)]
-     [bind ident(result) literal(false)]]
-    [bind ident(result) literal(true)]]]]}
-
-
-{Handle [localvar ident(foo)
-  [localvar ident(result)
-   [[bind ident(foo) literal(false)]
-    [conditional ident(foo) [bind ident(result) literal(true)]
-     [bind ident(result) literal(false)]]
-    [bind ident(result) literal(false)]]]]}
-
-
-%%---------- Procedure definition and application ---------   
-%It's complete.
-
-{Handle [localvar ident(x)
- [[bind ident(x)
-   [proceed [ident(y) ident(x)] [nop]]]
-  [apply ident(x) literal(1) literal(2)]
- ]
-]}
-
-{Handle [localvar ident(x)
- [[bind ident(x)
-   [proceed [ident(y) ident(x)] [nop]]]
-  [apply ident(x)
-   literal(1) [record literal(label) [[literal(f1) literal(p)]]]
-   ]]]}
-   
-{Handle [localvar ident(foo)
- [localvar ident(bar)
-  [localvar ident(quux)
-   [[bind ident(bar) [proceed [ident(baz)]
-          [bind [record literal(person) [[literal(age) ident(foo)]]] ident(baz)]]]
-    [apply ident(bar) ident(quux)]
-    [bind [record literal(person) [[literal(age) literal(40)]]] ident(quux)]
-    [bind literal(42) ident(foo)]]]]]}
-
-% We'll check whether foo has been assigned the value by raising an exception here
-   
-{Handle [localvar ident(foo)
- [localvar ident(bar)
-  [localvar ident(quux)
-   [[bind ident(bar) [proceed [ident(bai)]
-          [[localvar ident(kite) [bind ident(kite) [proceed [ident(baz)] [bind ident(baz) [record literal(person) [[literal(age) ident(foo)]]]]]] [apply ident(kite) ident(bai)]]]]]
-    [apply ident(bar) ident(quux)]
-    [bind [record literal(person) [[literal(age) literal(40)]]] ident(quux)]
-    [bind literal(40) ident(foo)]]]]]}
-
-%Proc within Proc
-
-%%------------ Pattern Match -------------------
-%It's complete
-
-{Handle [localvar ident(x)
- [[bind ident(x)
-   [record literal(label)
-    [[literal(f1) literal(1)]
-    [literal(f2) literal(2)]]]]
-  [match ident(x)
-   [record literal(label)
-    [[literal(f1) literal(1)]
-    [literal(f2) literal(2)]]] [[nop]] [nop]]]]}
-   
-{Handle [localvar ident(foo)
- [localvar ident(result)
-  [[bind ident(foo) [record literal(bar)
-           [[literal(baz) literal(42)]
-           [literal(quux) literal(314)]]]]
-   [match ident(foo) [record literal(bar)
-            [[literal(baz) ident(fortytwo)]
-            [literal(quux) ident(pitimes100)]]] [bind ident(result) ident(fortytwo)]
-    [bind ident(result) literal(314)]]
-   [bind ident(result) literal(42)]
-   [nop]]]]}
-% This will raise an exception if result is not 42
-
-{Handle [localvar ident(foo)
-  [localvar ident(bar)
-   [localvar ident(baz)
-    [[bind ident(foo) ident(bar)]
-     [bind literal(20) ident(bar)]
-     [match ident(foo) literal(21) [bind ident(baz) literal(true)]
-      [bind ident(baz) literal(false)]]
-     [bind ident(baz) literal(false)]
-     [nop]]]]]}
-   
-{Handle [localvar ident(foo)
-  [localvar ident(bar)
-   [localvar ident(baz)
-    [localvar ident(result)
-     [[bind ident(foo) literal(person)]
-      [bind ident(bar) literal(age)]
-      [bind ident(baz) [record literal(person) [[literal(age) literal(25)]]]]
-      [match ident(baz) [record ident(foo) [[ident(bar) ident(quux)]]] [bind ident(result) ident(quux)]
-       [bind ident(result) literal(false)]]
-      [bind ident(result) literal(25)]]]]]]}
-
-{Handle [localvar ident(a) [[bind ident(a) [proceed [ident(b)] [localvar ident(foo)
- [localvar ident(result)
-  [[bind ident(foo) [record literal(bar)
-         [[literal(baz) literal(42)]
-         [literal(quux) literal(314)]]]]
-   [match ident(foo) [record literal(bar)
-          [[literal(baz) ident(fortytwo)]
-          [literal(quux) ident(pitimes100)]]] [bind ident(result) ident(fortytwo)]
-    [bind ident(result) literal(314)]]
-   [bind ident(result) literal(42)]
-   [nop]]]]]] [apply ident(a) literal(30)]]]}
-%Match within Procedure
+{Handle [localvar ident(x) [localvar ident(y) [[dhaaga [bind ident(y) literal(10)] ant] [dhaaga [bind ident(x) literal(20)] ant]]]]}
