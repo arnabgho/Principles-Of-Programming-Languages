@@ -1,0 +1,24 @@
+declare AddStreams ProduceRandom Xs Ys MultiplyStreams DivideStreams  in
+
+fun lazy {AddStreams Xs Ys}
+   Xs.1+Ys.1 | {AddStreams Xs.2 Ys.2}
+end
+
+%fun lazy {ProduceRandom }
+%   ({OS.rand} mod 100 )*1.0 % |{ProduceRandom}
+%end
+
+fun lazy {MultiplyStreams Xs Ys}
+   Xs.1*Ys.1 | {MultiplyStreams Xs.2 Ys.2}
+end
+
+fun lazy {DivideStreams Xs Ys}
+   Xs.1/Ys.1 | {DivideStreams Xs.2 Ys.2}
+end
+
+Xs=Xs | ({OS.rand} mod 100 )*1.0
+
+Ys=Xs.1|{AddStreams Ys Xs.2}
+
+{Browse 2}
+{Browse {List.take Xs 3}}

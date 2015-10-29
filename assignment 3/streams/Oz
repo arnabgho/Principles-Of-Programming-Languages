@@ -1,0 +1,9 @@
+fun {PrimesFrom A}
+   local X Y in
+      thread X={IntsFrom A} end
+      thread Y={Filter IsPrime X} end 	 
+      Y
+   end
+end
+
+{ Browse {PrimesFrom 2 } }
