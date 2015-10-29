@@ -1,0 +1,8 @@
+fun lazy {Append Xs Ys}
+   case Xs
+   of nil then Ys
+   [] H|T then H|{Append T Ys}
+   end
+end
+
+{Browse {Append [1 2 3] [4 5 6]}}
