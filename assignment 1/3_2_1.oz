@@ -23,6 +23,8 @@ local Sine Sum ShowN  Sin in
       {Sine X 1.0 1.0 1.0 1.0}
    end
 
-   {Browse {Sum {Sin ~1.57} 20} }
+   {Browse {Sum {Sin 0.5} 2} }
+   {Browse {Sum {Sin 0.5} 1} }
+   {Browse {Sum {Sin 0.5} 100000} }
    {Browse {ShowN {Sin ~1.57} 2} }
 end

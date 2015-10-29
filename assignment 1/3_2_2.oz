@@ -24,5 +24,5 @@ local Sine SumEps ShowEps  Sin in
    
    
    {Browse {SumEps {Sin ~1.57} 0.0001} }
-   {Browse {ShowEps {Sin ~1.57} 0.0001} }
+   {Browse {ShowEps {Sin 0.5} 0.1} }
 end

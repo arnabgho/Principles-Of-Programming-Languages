@@ -11,4 +11,7 @@ local Drop Length in
       end
    end
    {Browse {Drop [1 2 3 4 5] 0}}
+   {Browse {Drop [1 2 3 4 5] ~1}}
+   {Browse {Drop [1 2 3 4 5] 3}}
+    {Browse {Drop [1 2 3 4 5] 6}}
 end

@@ -14,5 +14,6 @@ local FoldL FoldLCont Sum in
       else{FoldLCont B {B Identity Xs.1}|Xs.2 Identity}
       end 
    end
-   {Browse{FoldL Sum  [] 0}}
+   {Browse{FoldL Sum  nil 0}}
+   {Browse{FoldL Sum  [2 3 5] 0}}
 end

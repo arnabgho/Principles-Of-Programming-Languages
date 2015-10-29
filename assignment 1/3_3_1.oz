@@ -62,3 +62,5 @@ end
 %{Browse  (1|2|3|nil) |  (1| 2| 3|nil) |  (1| 2| 3|nil) | nil }
 
 {Browse {WhoWon [[x x s][o x s][o x x ]]  }}
+{Browse {WhoWon [[x x o][x x o][x o o ]]  }}
+{Browse {WhoWon [[s s s][s s o][s s s ]]  }}

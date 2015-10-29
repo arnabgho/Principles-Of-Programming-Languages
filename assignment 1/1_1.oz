@@ -7,4 +7,7 @@ local Take in
       end
    end
    {Browse {Take [1 2 3] 2}}
+   {Browse {Take [1 2 3] ~1}}
+   {Browse {Take [1 2 3] 0}}
+   {Browse {Take [1 2 3] 5}}
 end

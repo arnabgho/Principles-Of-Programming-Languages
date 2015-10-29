@@ -6,4 +6,6 @@ local Sine Sin in
    fun {Sin X}
       {Sine X 1.0 1.0 1.0 1.0}
    end
+
+   {Browse {Sin 0.5}}
 end

@@ -42,4 +42,4 @@ fun {PredMove Grid M}
    end
 end
 
-{Browse {PredMove [[x x s][o x s][o x x]] o}}
+{Browse {PredMove [[o o s][x o x][x o s]] o}}

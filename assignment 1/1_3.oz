@@ -7,4 +7,7 @@ local Merge in
       end
    end
    {Browse {Merge [1 2 3] [4 5] }}
+   {Browse {Merge nil [4 5] }}
+   {Browse {Merge nil nil }}
+   {Browse {Merge [3 1 5] [4 2 6] }}
 end

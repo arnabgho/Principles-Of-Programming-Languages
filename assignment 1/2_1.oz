@@ -6,4 +6,5 @@ local ZipWith in
       end
    end
    {Browse {ZipWith fun {$ A B} A*B end [4] [7 8 ]}}
+   {Browse {ZipWith fun {$ A B} A*B end nil [7 8 ]}}
 end
