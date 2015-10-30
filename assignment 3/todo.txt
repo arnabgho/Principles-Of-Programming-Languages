@@ -1,13 +1,20 @@
 [thread <s> end]
-1. Extend the semantic stack in Assignment 2 to a semantic multistack.
-2. If the top statement in the currently active semantic stack is ([thread <s> end],E), then create a new semantic stack and push (<s>,E) onto it.
-3. Each stack in the multistack will correspond to a thread in the code.
-4. When the program executes, it will be just 1 stack in 1 multistack
-5. There will be no thread scheduler. The execution continues with the previously active stack until it becomes empty or suspends.
-6. Once a stack completes (or suspends), you should pick another non-empty stack and continue execution until it completes (or suspends) and so on.
-7. If there is no non-empty stack, or if every stack is suspended, then the execution completes.
+	1. Extend the semantic stack in Assignment 2 to a semantic multistack.
+	2. If the top statement in the currently active semantic stack is ([thread <s> end],E), then create a new semantic stack and push (<s>,E) onto it.
+	3. Each stack in the multistack will correspond to a thread in the code.
+	4. When the program executes, it will be just 1 stack in 1 multistack
+	5. There will be no thread scheduler. The execution continues with the previously active stack until it becomes empty or suspends.
+	6. Once a stack completes (or suspends), you should pick another non-empty stack and continue execution until it completes (or suspends) and so on.
+	7. If there is no non-empty stack then the execution completes.
+8. If every stack is suspended then the execution completes.
+
 
 	1. Currently I won't handle suspension but just stack completion
-1. Does the thread suspend only if the variable it's using should be bound but is unbound? Am I suspending the program in this case?
-2. For suspension make another multistack where suspended threads are added. When Multistack finishes, rename that multistack as Multistack :)
-3. See when suspension can occur (In that case you should make sure that the statement because of which suspension occured isn't removed)
+	2. A thread suspends only if the variable it's using should be bound but is unbound.
+	3. Am I suspending the program in this case? Yes: keyNotBoundBoolean(y), invalidProc(x), 
+	4. We can catch exception raised using "try-catch" in apply as well as conditional
+	1. Change what happens when @SemStack==nil
+	2. For suspension make another multistack where suspended threads are added. When Multistack finishes, rename that multistack as Multistack :)
+	3. See when suspension can occur (In that case you should make sure that the statement because of which suspension occured isn't removed)
+	4. How to catch excptions in functions
+5. 
