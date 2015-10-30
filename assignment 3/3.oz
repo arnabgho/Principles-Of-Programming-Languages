@@ -10,15 +10,20 @@ Terminate = {NewCell 0}
 Dummy = {NewCell 0}
 
 proc {Print}
-   if @SemStack == nil then
-      {Browse emptyStack}
+   if @Terminate == 1 then
       {Browse storeIsBelow}
       {Browse {Dictionary.entries KeyValueStore}}
    else
-      %{Browse @SemStack}
-      {Browse @SemStack.1.statements}
-      {Browse {Dictionary.entries @SemStack.1.environment}}
-      %{Browse {Dictionary.entries KeyValueStore}}
+      if @SemStack == nil then
+	 {Browse emptyStack}
+	 {Browse storeIsBelow}
+	 {Browse {Dictionary.entries KeyValueStore}}
+      else
+         %{Browse @SemStack}
+	 {Browse @SemStack.1.statements}
+	 {Browse {Dictionary.entries @SemStack.1.environment}}
+         %{Browse {Dictionary.entries KeyValueStore}}
+      end
    end
 end
 
@@ -287,13 +292,5 @@ proc {Handle Statements}
 end
 
 %{Handle [localvar ident(x) [localvar ident(y) [[dhaaga [bind ident(y) literal(10)] ant] [dhaaga [bind ident(x) literal(20)] ant]]]]}
-%{Handle [localvar ident(x)
-% [[localvar ident(y)
-%   [[localvar ident(x)
-%     [[bind ident(x) ident(y)]
-%      [conditional ident(y) [nop]
-%       [bind ident(x) literal(true)]]]]
-%    [bind ident(x) literal(35)]]]]]}
-%{Handle [localvar ident(x) [localvar ident(z) [[bind ident(z) literal(10)] [apply ident(x) ident(z)]]]]}
-%{Handle [localvar ident(x) [localvar ident(z) [[match ident(x) ident(z) [[nop]] [nop]]]]]}
-{Handle [localvar ident(x) [[localvar ident(y) [[dhaaga [bind ident(y) literal(true)] ant] [dhaaga [conditional ident(y) [bind ident(x) literal(10)] [bind ident(x) literal(20)]] ant]]]]]}
+%{Handle [localvar ident(x) [[localvar ident(y) [[dhaaga [bind ident(y) literal(true)] ant] [dhaaga [conditional ident(y) [bind ident(x) literal(10)] [bind ident(x) literal(20)]] ant]]]]]}
+{Handle [localvar ident(x) [[localvar ident(y) [[dhaaga [conditional ident(y) [bind ident(x) literal(10)] [bind ident(x) literal(20)]] ant]]]]]}
