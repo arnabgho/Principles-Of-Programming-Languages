@@ -1,0 +1,9 @@
+fun lazy {MyFilter MyFun Xs}
+   case Xs
+   of nil then nil
+   [] H|T then if {MyFun H}== true
+	       then H|{MyFilter MyFun T}
+	       else {MyFilter MyFun T}
+	       end
+   end    
+end

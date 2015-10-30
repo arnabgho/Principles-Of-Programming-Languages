@@ -42,4 +42,5 @@ end
 
 %{Browse {List.take {IntsFrom 2} 3 }}
 %{Browse {IsPrime 6}}
-{ Browse {List.take  {PrimesFrom 2 } 3 } }
+%{ Browse {List.take  {PrimesFrom 2 } 3 } }
+{Browse {Or true false }}
