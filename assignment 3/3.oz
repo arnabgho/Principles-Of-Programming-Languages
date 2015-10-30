@@ -293,4 +293,5 @@ end
 
 %{Handle [localvar ident(x) [localvar ident(y) [[dhaaga [bind ident(y) literal(10)] ant] [dhaaga [bind ident(x) literal(20)] ant]]]]}
 %{Handle [localvar ident(x) [[localvar ident(y) [[dhaaga [bind ident(y) literal(true)] ant] [dhaaga [conditional ident(y) [bind ident(x) literal(10)] [bind ident(x) literal(20)]] ant]]]]]}
-{Handle [localvar ident(x) [[localvar ident(y) [[dhaaga [conditional ident(y) [bind ident(x) literal(10)] [bind ident(x) literal(20)]] ant]]]]]}
+%{Handle [localvar ident(x) [[localvar ident(y) [[dhaaga [conditional ident(y) [bind ident(x) literal(10)] [bind ident(x) literal(20)]] ant]]]]]}
+{Handle [localvar ident(x) [[localvar ident(y) [[dhaaga [conditional ident(y) [bind ident(x) literal(10)] [bind ident(x) literal(20)]] ant] [dhaaga [conditional ident(y) [bind ident(x) literal(10)] [bind ident(x) literal(20)]] ant]]]]]}
