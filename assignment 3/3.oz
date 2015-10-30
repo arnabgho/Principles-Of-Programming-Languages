@@ -184,14 +184,15 @@ end
 proc {New_Thread S E}
    SemStack:=@SemStack.2
    MultiSemStack:=[tuple(statements:S environment:E)] | @MultiSemStack
+   {Print}
 end
 
 proc {AddToSuspended D}
-   SemStack:=D | @SemStack
+   SemStack:=@D | @SemStack
    SuspendedStack:=@SemStack | @SuspendedStack
    if @MultiSemStack==nil then
       MultiSemStack:=@SuspendedStack
-      SuspendedStack = {NewCell nil}
+      SuspendedStack:=nil
       if @Suspended==1 then
 	 Terminate:=1
       else
@@ -200,6 +201,7 @@ proc {AddToSuspended D}
    end
    SemStack:=@MultiSemStack.1
    MultiSemStack:=@MultiSemStack.2
+   {Print}
 end
 
 proc {Driver}
@@ -211,7 +213,7 @@ proc {Driver}
 		  skip
 	       else
 		  MultiSemStack:=@SuspendedStack
-		  SuspendedStack = {NewCell nil}
+		  SuspendedStack:=nil
 		  if @Suspended==1 then
 		     Terminate:=1
 		  else
@@ -221,6 +223,7 @@ proc {Driver}
 	    end
 	    SemStack:=@MultiSemStack.1
 	    MultiSemStack:=@MultiSemStack.2
+	    {Print}
 	    {Driver}
 	 else
 	    X=@SemStack.1
@@ -293,3 +296,4 @@ end
 %    [bind ident(x) literal(35)]]]]]}
 %{Handle [localvar ident(x) [localvar ident(z) [[bind ident(z) literal(10)] [apply ident(x) ident(z)]]]]}
 %{Handle [localvar ident(x) [localvar ident(z) [[match ident(x) ident(z) [[nop]] [nop]]]]]}
+{Handle [localvar ident(x) [[localvar ident(y) [[dhaaga [bind ident(y) literal(true)] ant] [dhaaga [conditional ident(y) [bind ident(x) literal(10)] [bind ident(x) literal(20)]] ant]]]]]}

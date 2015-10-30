@@ -6,7 +6,7 @@
 	5. There will be no thread scheduler. The execution continues with the previously active stack until it becomes empty or suspends.
 	6. Once a stack completes (or suspends), you should pick another non-empty stack and continue execution until it completes (or suspends) and so on.
 	7. If there is no non-empty stack then the execution completes.
-8. If every stack is suspended then the execution completes.
+	8. If every stack is suspended then the execution completes.
 
 
 	1. Currently I won't handle suspension but just stack completion
