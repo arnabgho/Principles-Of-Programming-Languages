@@ -1,4 +1,4 @@
-declare Result AddStreams ProduceRandom Xs Ys MultiplyStreams DivideStreams Ones PositiveIntegers  in
+declare AddStreams ProduceRandom Xs Ys Zs MultiplyStreams DivideStreams Ones PositiveIntegers  in
 
 fun lazy {AddStreams Xs Ys}
    Xs.1+Ys.1 | {AddStreams Xs.2 Ys.2}
@@ -20,13 +20,13 @@ end
 
 thread Xs = {ProduceRandom} end
 
-Ys=Xs.1|{AddStreams Ys Xs.2}
+Zs=Xs.1|{AddStreams Zs Xs.2}
 
 Ones=1.0|Ones
 
 PositiveIntegers=1.0| {AddStreams Ones PositiveIntegers}
 
-Result={DivideStreams Ys PositiveIntegers}
+thread Ys={DivideStreams Zs PositiveIntegers} end
 {Browse {List.take Xs 3}}
-{Browse {List.take Ys 3}}
-{Browse {List.take Result 3 } }
+{Browse {List.take Zs 3}}
+{Browse {List.take Ys 3 } }

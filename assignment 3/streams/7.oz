@@ -10,8 +10,8 @@ proc{Barrier Procs}
 	 [] nil then L
 	 end
       end
-      %S={BarrierLoop Procs unit}
-      S={BarrierLoop Procs Z}
+      S={BarrierLoop Procs unit}
+      %S={BarrierLoop Procs Z}
       {Wait S}
       {Browse done}
    end
