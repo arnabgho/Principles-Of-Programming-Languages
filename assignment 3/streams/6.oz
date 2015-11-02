@@ -1,6 +1,8 @@
-declare NSelect X X1 X2  S1 S2 Length N AnySelected NumFalse NewList AllFalse AnyDet in
+declare NSelect NSelectLoop  X X1 X2  S1 S2 Length N AnySelected NumFalse NewList AllFalse AnyDet in
 
 NumFalse={NewCell 0}
+
+AnySelected={NewCell 0}
 
 fun{Length List}
    case List
@@ -12,28 +14,44 @@ end
 
 proc {NSelect List}
    %{Browse List}
-   case List
-   of nil then skip
-   [] true#S|nil then {Browse S}
-      thread
-	 if AllFalse==true
-	 then {S} AnySelected=true
-	 end
-      end   
-   [] X#S|Rest then {Browse S}
-      thread
-	 if X==false
-	 then NumFalse:=@NumFalse+1 AnyDet=true
-	    if @NumFalse==N
-	    then AllFalse=true
+   N={Length List}-1
+   {Browse N}
+   proc{NSelectLoop List}
+      case List
+      of nil then skip
+      [] X#S|Rest then
+	 {Browse enjoy}
+	 thread
+	    {Browse @AnySelected}
+	    if X==false
+	    then NumFalse:=@NumFalse+1 AnyDet=true
+	       if @NumFalse==N
+	       then AllFalse=true
+	       end
+	    else
+	       if X==true then
+		  if  AnySelected==1 then AnyDet=true
+		  else {S} AnySelected:=1 AnyDet=true
+		  end
+	       else
+		  if X==hrue then
+		     if AllFalse==true
+		     then {S} AnySelected:=1
+		     end
+		  end
+	       end
 	    end
-	 else if {IsDet AnySelected} then AnyDet=true
-	      else {S} AnySelected=true AnyDet=true
-	      end
 	 end
+	 {NSelectLoop Rest}
+      [] hrue#S|nil then
+      	 thread
+      	    if AllFalse==true
+	    then {S} AnySelected:=1
+	    end
+	 end   
       end
-      {NSelect Rest}
    end
+   {NSelectLoop List}
    {Wait AnyDet}
    {Browse hello}
 end
@@ -44,13 +62,19 @@ end
 
 NewList=[ X1#proc {$} {Browse thread1} end
 	  X2#proc {$} {Browse thread2} end
-	  true#proc {$} {Browse default} end ]
+	  hrue#proc {$} {Browse default} end ]
 
 
-N={Length NewList}-1
+%N={Length NewList}-1
 
 {Browse NewList}
 
+%X1=true
+%X2=true
+%X1=false
+%X1=false
+%X1=true
+%X1=false
 X1=true
 X2=true
 {NSelect NewList}
