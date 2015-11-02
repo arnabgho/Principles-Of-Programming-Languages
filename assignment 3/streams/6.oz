@@ -11,17 +11,18 @@ end
 
 
 proc {NSelect List}
+   %{Browse List}
    case List
    of nil then skip
-   [] true#S|nil then
+   [] true#S|nil then {Browse S}
       thread
 	 if AllFalse==true
 	 then {S} AnySelected=true
 	 end
       end   
-   [] X#S|Rest then
+   [] X#S|Rest then {Browse S}
       thread
-	 if {X==false}
+	 if X==false
 	 then NumFalse:=@NumFalse+1 AnyDet=true
 	    if @NumFalse==N
 	    then AllFalse=true
@@ -37,9 +38,19 @@ proc {NSelect List}
    {Browse hello}
 end
 
-N={Length NewList}-1
-NewList=[ X1#proc {$} X=1 end
-	   X2#proc {$} {Browse X} end  true#proc {$} {Browse default} end ]
 
-S1=true
-{NSelect S1#S2}
+%NewList=[ X1#proc {$} X=1 end
+%	  X2#proc {$} {Browse X} end  true#proc {$} {Browse default} end ]
+
+NewList=[ X1#proc {$} {Browse thread1} end
+	  X2#proc {$} {Browse thread2} end
+	  true#proc {$} {Browse default} end ]
+
+
+N={Length NewList}-1
+
+{Browse NewList}
+
+X1=true
+X2=true
+{NSelect NewList}

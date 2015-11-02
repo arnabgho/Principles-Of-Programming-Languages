@@ -1,9 +1,9 @@
 declare Barrier X Z in
 proc{Barrier Procs}
-   %{Browse 1}
+   {Browse Procs}
    local BarrierLoop S in 
       fun {BarrierLoop Procs L}
-	 case Procs
+	 case Procs 
 	 of Proc|Procr then M
 	 in thread {Proc} M=L end
 	    {BarrierLoop Procr M}
