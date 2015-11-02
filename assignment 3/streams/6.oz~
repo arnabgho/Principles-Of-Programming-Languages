@@ -1,0 +1,5 @@
+declare Barrier in
+
+fun{Barrier Ps}
+   
+end

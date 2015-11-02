@@ -1,5 +1,4 @@
-declare PrimesFrom IsPrime IsPrimeHelper IntsFrom MyFilter  in
-
+declare Barrier PrimesFrom IsPrime IsPrimeHelper IntsFrom MyFilter GetNDistinctNames Length  in
 fun  {IntsFrom A}
    %{Browse A}
    A|{IntsFrom A+1}
@@ -43,4 +42,71 @@ end
 %{Browse {List.take {IntsFrom 2} 3 }}
 %{Browse {IsPrime 6}}
 %{ Browse {List.take  {PrimesFrom 2 } 3 } }
-{Browse {Or true false }}
+%{Browse {Or true false }}
+
+%local X Y B in 
+%    X = foo
+%    {NewName Y}
+%    B = true 
+%    {Browse [X Y B]}
+%end
+
+
+%{Browse {List.length [1 2 3]}}
+
+fun {GetNDistinctNames Res NumCreated N}
+   if NumCreated==N then Res
+   else
+      local Y in
+	 {NewName Y}
+	 {GetNDistinctNames Y|Res NumCreated+1 N}
+      end
+   end
+end
+
+%local Xs X Y in
+%   Xs={GetNDistinctNames nil 0 5 }
+%   X=Xs.1
+%   Y=Xs.2
+%   {Browse X==Y }
+%end
+
+
+fun{Length Xs}
+   case Xs of nil then 0
+   [] H|T then 1+{Length T}
+   end
+end
+
+
+local NVar Xs List Manage Z in
+   %{Browse hi}
+   Xs=[1 2 3]
+   {Browse Xs}
+   NVar={Length Xs}
+   %NVar=3
+   {Browse NVar}
+   List={GetNDistinctNames nil 0 NVar }
+   {Browse List}
+   proc{Manage Xs List NumComplete N}
+      {Browse NumComplete}
+      {Browse List}
+      {Browse {IsDet List.1}}
+      if NumComplete==N-1 then thread List.1=Z end
+      else
+	 thread List.1=List.2.1 end
+	 {Manage Xs List.2 NumComplete+1 N}
+      end
+   end
+
+   {Manage Xs List 0 NVar}
+   {Wait List.1}
+   {Browse hello}
+end
+
+declare DP  Xd in
+DP={Dictionary.new}
+{DP.put 1 Xd=2 }
+%{Browse Xd}
+
+%thread {DP.get } end

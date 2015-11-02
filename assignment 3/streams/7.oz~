@@ -1,0 +1,16 @@
+%declare Barrier in
+
+%thread 
+%   proc{Barrier Ps}
+%      case Ps
+%      of P|Rest then thread {P} end {Barrier Rest}
+%      [] nil then skip
+%      end
+%   end
+%end
+declare Barrier in
+
+proc{Barrier Procs}
+
+end
+

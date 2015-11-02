@@ -1,0 +1,32 @@
+declare Barrier in
+proc {Barrier Procs}
+   %------------------------
+   % Takes a finite list of procedures, and a variable L used for 
+   % synchronizing.
+   %
+   % Runs each process in its own thread,
+   % creates a new variable M, binds it to L, and passes M recursively
+   % to run other procedures. 
+   %
+   % Return value is L if there is no procedure to execute,
+   % and the result of the recursive call otherwise.
+   %------------------------
+   fun {BarrierLoop Procs L}
+      case Procs
+      of  Proc|Procr then
+          M
+      in
+          thread {Proc} M=L end
+          {BarrierLoop Procr M}
+      [] nil then L
+   end
+
+
+   S = {BarrierLoop Procs unit}
+in
+   {Wait S}
+end
+
+%------------- Example Usage-------------------
+{Barrier [ proc {$} X = 1 end
+           proc {$} {Browse X} end]}
