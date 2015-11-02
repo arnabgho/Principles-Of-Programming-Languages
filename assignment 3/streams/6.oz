@@ -31,12 +31,12 @@ proc {NSelect List}
 	    else
 	       if X==true then
 		  if  @AnySelected==1 then AnyDet=true
-		  else {S} AnySelected:=1 AnyDet=true
+		  else AnySelected:=1 AnyDet=true {S}
 		  end
 	       else
 		  if X==hrue then
 		     if AllFalse==true
-		     then {S} AnySelected:=1
+		     then AnySelected:=1 {S}
 		     end
 		  end
 	       end
@@ -62,8 +62,8 @@ end
 
 NewList=[ X1#proc {$} {Browse thread1} end
 	  X2#proc {$} {Browse thread2} end 
-	  %X3#proc {$} {Browse thread3} end
-	  %X4#proc {$} {Browse thread4} end
+	  X3#proc {$} {Browse thread3} end
+	  X4#proc {$} {Browse thread4} end
 	  hrue#proc {$} {Browse default} end ]
 
 
@@ -77,6 +77,8 @@ NewList=[ X1#proc {$} {Browse thread1} end
 %X1=false
 %X1=true
 %X1=false
-X1=false
-X2=false
+X1=true
+X2=true
+X3=true
+X4=true
 {NSelect NewList}
