@@ -1,4 +1,4 @@
-declare NSelect X1 X2  S1 S2 Length N AnySelected NumFalse NewList AllFalse  in
+declare NSelect X1 X2  S1 S2 Length N AnySelected NumFalse NewList AllFalse AnyDet in
 
 NumFalse={NewCell 0}
 
@@ -20,7 +20,7 @@ proc {NSelect List}
 	    if NumFalse==N
 	    then AllFalse=true
 	    end
-	 else if {IsDet AnySelected} then skip AnyDet=true
+	 else if {IsDet AnySelected} then AnyDet=true
 	      else {S} AnySelected=true AnyDet=true
 	      end
 	 end
@@ -33,7 +33,7 @@ proc {NSelect List}
 	 end
       end
    end
-   {Wait AnySelected}
+   {Wait AnyDet}
 end
 
 N={Length NewList}-1
