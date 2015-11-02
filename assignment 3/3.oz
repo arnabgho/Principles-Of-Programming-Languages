@@ -294,4 +294,18 @@ end
 %{Handle [localvar ident(x) [localvar ident(y) [[dhaaga [bind ident(y) literal(10)] ant] [dhaaga [bind ident(x) literal(20)] ant]]]]}
 %{Handle [localvar ident(x) [[localvar ident(y) [[dhaaga [bind ident(y) literal(true)] ant] [dhaaga [conditional ident(y) [bind ident(x) literal(10)] [bind ident(x) literal(20)]] ant]]]]]}
 %{Handle [localvar ident(x) [[localvar ident(y) [[dhaaga [conditional ident(y) [bind ident(x) literal(10)] [bind ident(x) literal(20)]] ant]]]]]}
-{Handle [localvar ident(x) [[localvar ident(y) [[dhaaga [conditional ident(y) [bind ident(x) literal(10)] [bind ident(x) literal(20)]] ant] [dhaaga [conditional ident(y) [bind ident(x) literal(10)] [bind ident(x) literal(20)]] ant]]]]]}
+%{Handle [localvar ident(x) [[localvar ident(y) [[dhaaga [conditional ident(y) [bind ident(x) literal(10)] [bind ident(x) literal(20)]] ant] [dhaaga [conditional ident(y) [bind ident(x) literal(10)] [bind ident(x) literal(20)]] ant]]]]]}
+%{Handle [localvar ident(foo)
+%    [localvar ident(bar) [localvar ident(x) [
+%     [[dhaaga [bind ident(foo) [record literal(person) [[literal(name) ident(x)]]]] ant]
+%      [dhaaga [bind ident(bar) [record literal(person) [[literal(name) literal(10)]]]] ant]
+%      [dhaaga [bind ident(foo) ident(bar)] ant]]]]]] }
+%{Handle [localvar ident(x)
+%  [[localvar ident(y)
+%    [[localvar ident(x)
+%      [[dhaaga [bind ident(x) ident(y)] ant]
+%       [dhaaga [bind ident(y) literal(true)] ant]
+%       [dhaaga [conditional ident(y) [nop]
+%        [bind ident(x) literal(true)]] ant]]]
+%     [bind ident(x) literal(35)]]]]]
+%}
