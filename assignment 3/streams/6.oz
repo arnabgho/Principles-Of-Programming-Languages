@@ -30,7 +30,7 @@ proc {NSelect List}
 	       end
 	    else
 	       if X==true then
-		  if  AnySelected==1 then AnyDet=true
+		  if  @AnySelected==1 then AnyDet=true
 		  else {S} AnySelected:=1 AnyDet=true
 		  end
 	       else
