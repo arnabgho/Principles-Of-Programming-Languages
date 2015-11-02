@@ -1,4 +1,4 @@
-declare NSelect NSelectLoop  X X1 X2  S1 S2 Length N AnySelected NumFalse NewList AllFalse AnyDet in
+declare NSelect NSelectLoop  X X1 X2 X3 X4  S1 S2 Length N AnySelected NumFalse NewList AllFalse AnyDet in
 
 NumFalse={NewCell 0}
 
@@ -61,7 +61,9 @@ end
 %	  X2#proc {$} {Browse X} end  true#proc {$} {Browse default} end ]
 
 NewList=[ X1#proc {$} {Browse thread1} end
-	  X2#proc {$} {Browse thread2} end
+	  X2#proc {$} {Browse thread2} end 
+	  %X3#proc {$} {Browse thread3} end
+	  %X4#proc {$} {Browse thread4} end
 	  hrue#proc {$} {Browse default} end ]
 
 
@@ -75,6 +77,6 @@ NewList=[ X1#proc {$} {Browse thread1} end
 %X1=false
 %X1=true
 %X1=false
-X1=true
-X2=true
+X1=false
+X2=false
 {NSelect NewList}
